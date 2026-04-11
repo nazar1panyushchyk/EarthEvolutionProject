@@ -1,0 +1,116 @@
+﻿[
+  {
+    "EraName": "Мезозойська",
+    "Description": "Мезозойська ера, відома як 'Ера динозаврів', тривала близько 186 мільйонів років. Це був час розпаду суперконтиненту Пангея, появи квіткових рослин, перших ссавців та панування гігантських рептилій.",
+    "Periods": [
+      {
+        "Id": 1,
+        "Name": "Тріасовий період",
+        "Timeline": "252 – 201 млн років тому",
+        "Climate": "Клімат був переважно жарким і сухим, з великими пустелями всередині континенту. Наприкінці періоду почався розпад Пангеї.",
+        "MainImage": "/Assets/Images/triassic_main.jpg",
+        "Species": [
+          {
+            "ScientificName": "Coelophysis",
+            "CommonName": "Целофізис",
+            "Type": "Хребетні",
+            "Diet": "Хижак",
+            "Environment": "Наземне",
+            "Description": "Один із найперших динозаврів. Швидкий, спритний мисливець з порожнистими кістками.",
+            "IconPath": "/Assets/Icons/coelophysis.png"
+          },
+          {
+            "ScientificName": "Plateosaurus",
+            "CommonName": "Платеозавр",
+            "Type": "Хребетні",
+            "Diet": "Травоїдний",
+            "Environment": "Наземне",
+            "Description": "Великий ранній динозавр, який міг пересуватися як на двох, так і на чотирьох лапах.",
+            "IconPath": "/Assets/Icons/plateosaurus.png"
+          },
+          {
+            "ScientificName": "Cynodont",
+            "CommonName": "Цинодонт",
+            "Type": "Ссавцеподібні",
+            "Diet": "Всеїдний",
+            "Environment": "Наземне",
+            "Description": "Прямий предок сучасних ссавців. Мав шерсть і, ймовірно, був теплокровним.",
+            "IconPath": "/Assets/Icons/cynodont.png"
+          }
+        ]
+      },
+      {
+        "Id": 2,
+        "Name": "Юрський період",
+        "Timeline": "201 – 145 млн років тому",
+        "Climate": "Вологий та теплий. Величезні пустелі змінилися папоротниковими лісами. Рівень моря піднявся.",
+        "MainImage": "/Assets/Images/jurassic_main.jpg",
+        "Species": [
+          {
+            "ScientificName": "Brachiosaurus",
+            "CommonName": "Брахіозавр",
+            "Type": "Хребетні",
+            "Diet": "Травоїдний",
+            "Environment": "Наземне",
+            "Description": "Гігантський травоїдний динозавр, чиї передні лапи були довшими за задні.",
+            "IconPath": "/Assets/Icons/brachiosaurus.png"
+          },
+          {
+            "ScientificName": "Archaeopteryx",
+            "CommonName": "Археоптерикс",
+            "Type": "Птахи",
+            "Diet": "Хижак",
+            "Environment": "Повітряне",
+            "Description": "Перехідна форма між динозаврами та птахами. Мав пір'я, але зберіг зуби та довгий кістковий хвіст.",
+            "IconPath": "/Assets/Icons/archaeopteryx.png"
+          },
+          {
+            "ScientificName": "Stegosaurus",
+            "CommonName": "Стегозавр",
+            "Type": "Хребетні",
+            "Diet": "Травоїдний",
+            "Environment": "Наземне",
+            "Description": "Відомий своїми великими пластинами на спині та шипами на хвості для захисту.",
+            "IconPath": "/Assets/Icons/stegosaurus.png"
+          }
+        ]
+      },
+      {
+        "Id": 3,
+        "Name": "Крейдовий період",
+        "Timeline": "145 – 66 млн років тому",
+        "Climate": "Поява перших квітів. Континенти почали набувати сучасного вигляду. Завершився масовим вимиранням.",
+        "MainImage": "/Assets/Images/cretaceous_main.jpg",
+        "Species": [
+          {
+            "ScientificName": "Tyrannosaurus Rex",
+            "CommonName": "Тиранозавр",
+            "Type": "Хребетні",
+            "Diet": "Хижак",
+            "Environment": "Наземне",
+            "Description": "Один із найбільших наземних хижаків усіх часів з надзвичайно потужним укусом.",
+            "IconPath": "/Assets/Icons/trex.png"
+          },
+          {
+            "ScientificName": "Triceratops",
+            "CommonName": "Трицератопс",
+            "Type": "Хребетні",
+            "Diet": "Травоїдний",
+            "Environment": "Наземне",
+            "Description": "Мав три роги та великий кістковий комір для захисту від хижаків.",
+            "IconPath": "/Assets/Icons/triceratops.png"
+          },
+          {
+            "ScientificName": "Mosasaurus",
+            "CommonName": "Мозазавр",
+            "Type": "Хребетні",
+            "Diet": "Хижак",
+            "Environment": "Водне",
+            "Description": "Величезна морська рептилія, що була головним хижаком океанів крейдового періоду.",
+            "IconPath": "/Assets/Icons/mosasaurus.png"
+          }
+        ]
+      }
+    ]
+  }
+]
