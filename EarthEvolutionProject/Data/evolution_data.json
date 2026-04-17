@@ -1,115 +1,439 @@
 ﻿[
   {
-    "EraName": "Мезозойська",
-    "Description": "Мезозойська ера, відома як 'Ера динозаврів', тривала близько 186 мільйонів років. Це був час розпаду суперконтиненту Пангея, появи квіткових рослин, перших ссавців та панування гігантських рептилій.",
-    "Periods": [
+    "Id": "triassic",
+    "Era": "Мезозой",
+    "Name": "Тріасовий період",
+    "Timeframe": "252 – 201 млн років тому",
+    "MainImage": "/Images/Backgrounds/triass.jpg", 
+    "Description": "Тріасовий період розпочався після найбільшого в історії Землі пермського масового вимирання, яке знищило близько 90% усіх видів. Планета на той час являла собою єдиний гігантський суперконтинент Пангею, який омивався єдиним океаном Панталассою. Клімат був надзвичайно посушливим і спекотним, без льодовикових шапок на полюсах. У глибині материка утворилися безкрайні пустелі.\n\nСаме в Тріасі життя почало повільно відновлюватися. Цей час став перехідним етапом: давні синапсиди (звіроподібні рептилії) поступово поступалися місцем новим володарям планети — архозаврам, від яких наприкінці періоду походять перші справжні динозаври. У морях з'явилися перші іхтіозаври, а в повітря піднялися перші птерозаври. Також наприкінці Тріасу в тіні велетенських рептилій виникли перші дрібні ссавці, які були змушені вести нічний спосіб життя.",
+    "Organisms": [
       {
-        "Id": 1,
-        "Name": "Тріасовий період",
-        "Timeline": "252 – 201 млн років тому",
-        "Climate": "Клімат був переважно жарким і сухим, з великими пустелями всередині континенту. Наприкінці періоду почався розпад Пангеї.",
-        "MainImage": "/Assets/Images/triassic_main.jpg",
-        "Species": [
-          {
-            "ScientificName": "Coelophysis",
-            "CommonName": "Целофізис",
-            "Type": "Хребетні",
-            "Diet": "Хижак",
-            "Environment": "Наземне",
-            "Description": "Один із найперших динозаврів. Швидкий, спритний мисливець з порожнистими кістками.",
-            "IconPath": "/Assets/Icons/coelophysis.png"
-          },
-          {
-            "ScientificName": "Plateosaurus",
-            "CommonName": "Платеозавр",
-            "Type": "Хребетні",
-            "Diet": "Травоїдний",
-            "Environment": "Наземне",
-            "Description": "Великий ранній динозавр, який міг пересуватися як на двох, так і на чотирьох лапах.",
-            "IconPath": "/Assets/Icons/plateosaurus.png"
-          },
-          {
-            "ScientificName": "Cynodont",
-            "CommonName": "Цинодонт",
-            "Type": "Ссавцеподібні",
-            "Diet": "Всеїдний",
-            "Environment": "Наземне",
-            "Description": "Прямий предок сучасних ссавців. Мав шерсть і, ймовірно, був теплокровним.",
-            "IconPath": "/Assets/Icons/cynodont.png"
-          }
-        ]
+        "Id": "t1",
+        "CommonName": "Еораптор",
+        "ScientificName": "Eoraptor lunensis",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/eoraptor.png"
       },
       {
-        "Id": 2,
-        "Name": "Юрський період",
-        "Timeline": "201 – 145 млн років тому",
-        "Climate": "Вологий та теплий. Величезні пустелі змінилися папоротниковими лісами. Рівень моря піднявся.",
-        "MainImage": "/Assets/Images/jurassic_main.jpg",
-        "Species": [
-          {
-            "ScientificName": "Brachiosaurus",
-            "CommonName": "Брахіозавр",
-            "Type": "Хребетні",
-            "Diet": "Травоїдний",
-            "Environment": "Наземне",
-            "Description": "Гігантський травоїдний динозавр, чиї передні лапи були довшими за задні.",
-            "IconPath": "/Assets/Icons/brachiosaurus.png"
-          },
-          {
-            "ScientificName": "Archaeopteryx",
-            "CommonName": "Археоптерикс",
-            "Type": "Птахи",
-            "Diet": "Хижак",
-            "Environment": "Повітряне",
-            "Description": "Перехідна форма між динозаврами та птахами. Мав пір'я, але зберіг зуби та довгий кістковий хвіст.",
-            "IconPath": "/Assets/Icons/archaeopteryx.png"
-          },
-          {
-            "ScientificName": "Stegosaurus",
-            "CommonName": "Стегозавр",
-            "Type": "Хребетні",
-            "Diet": "Травоїдний",
-            "Environment": "Наземне",
-            "Description": "Відомий своїми великими пластинами на спині та шипами на хвості для захисту.",
-            "IconPath": "/Assets/Icons/stegosaurus.png"
-          }
-        ]
+        "Id": "t2",
+        "CommonName": "Постозух",
+        "ScientificName": "Postosuchus",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/postosuchus.png"
       },
       {
-        "Id": 3,
-        "Name": "Крейдовий період",
-        "Timeline": "145 – 66 млн років тому",
-        "Climate": "Поява перших квітів. Континенти почали набувати сучасного вигляду. Завершився масовим вимиранням.",
-        "MainImage": "/Assets/Images/cretaceous_main.jpg",
-        "Species": [
-          {
-            "ScientificName": "Tyrannosaurus Rex",
-            "CommonName": "Тиранозавр",
-            "Type": "Хребетні",
-            "Diet": "Хижак",
-            "Environment": "Наземне",
-            "Description": "Один із найбільших наземних хижаків усіх часів з надзвичайно потужним укусом.",
-            "IconPath": "/Assets/Icons/trex.png"
-          },
-          {
-            "ScientificName": "Triceratops",
-            "CommonName": "Трицератопс",
-            "Type": "Хребетні",
-            "Diet": "Травоїдний",
-            "Environment": "Наземне",
-            "Description": "Мав три роги та великий кістковий комір для захисту від хижаків.",
-            "IconPath": "/Assets/Icons/triceratops.png"
-          },
-          {
-            "ScientificName": "Mosasaurus",
-            "CommonName": "Мозазавр",
-            "Type": "Хребетні",
-            "Diet": "Хижак",
-            "Environment": "Водне",
-            "Description": "Величезна морська рептилія, що була головним хижаком океанів крейдового періоду.",
-            "IconPath": "/Assets/Icons/mosasaurus.png"
-          }
-        ]
+        "Id": "t3",
+        "CommonName": "Целофізис",
+        "ScientificName": "Coelophysis bauri",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/coelophysis.png"
+      },
+      {
+        "Id": "t4",
+        "CommonName": "Платеозавр",
+        "ScientificName": "Plateosaurus engelhardti",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/plateosaurus.png"
+      },
+      {
+        "Id": "t5",
+        "CommonName": "Лістрозавр",
+        "ScientificName": "Lystrosaurus",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/lystrosaurus.png"
+      },
+      {
+        "Id": "t6",
+        "CommonName": "Циногнат",
+        "ScientificName": "Cynognathus crateronotus",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/cynognathus.png"
+      },
+      {
+        "Id": "t7",
+        "CommonName": "Нотозавр",
+        "ScientificName": "Nothosaurus",
+        "Type": "Морський хижак",
+        "Image": "/Images/Organisms/nothosaurus.png"
+      },
+      {
+        "Id": "t8",
+        "CommonName": "Іхтіозавр",
+        "ScientificName": "Ichthyosaurus communis",
+        "Type": "Морський хижак",
+        "Image": "/Images/Organisms/ichthyosaurus.png"
+      },
+      {
+        "Id": "t9",
+        "CommonName": "Еудіморфодон",
+        "ScientificName": "Eudimorphodon ranzii",
+        "Type": "Літаючий",
+        "Image": "/Images/Organisms/eudimorphodon.png"
+      }
+    ]
+  },
+  {
+    "Id": "jurassic",
+    "Era": "Мезозой",
+    "Name": "Юрський період",
+    "Timeframe": "201 – 145 млн років тому",
+    "MainImage": "/Images/Backgrounds/jurassic.jpeg",
+    "Description": "Юрський період — золота доба динозаврів. Суперконтинент Пангея почав розколюватися на дві великі частини: Лавразію на півночі та Гондвану на півдні. Цей розкол призвів до утворення мілководних морів, які пом'якшили клімат. Він став набагато теплішим і вологішим, ніж у Тріасі. Безводні пустелі вкрилися пишними тропічними лісами з папоротей, саговників та гігнатських хвойних дерев (секвоя, араукарія).\n\nЗавдяки великій кількості рослинної їжі, з'явилися гігантські завроподи — найбільші сухопутні тварини в історії Землі, які сягали десятків метрів у довжину. За ними полювали великі тероподи, такі як алозаври. У повітрі панували птерозаври, а також з'явився археоптерикс — перехідна ланка між динозаврами та птахами. Океани кишіли різноманітним життям: від амонітів до гігантських морських рептилій (плезіозаврів та пліозаврів).",
+    "Organisms": [
+      {
+        "Id": "j1",
+        "CommonName": "Брахіозавр",
+        "ScientificName": "Brachiosaurus altithorax",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/brachio.png"
+      },
+      {
+        "Id": "j2",
+        "CommonName": "Стегозавр",
+        "ScientificName": "Stegosaurus stenops",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/stego.png"
+      },
+      {
+        "Id": "j3",
+        "CommonName": "Алозавр",
+        "ScientificName": "Allosaurus fragilis",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/allos.png"
+      },
+      {
+        "Id": "j4",
+        "CommonName": "Диплодок",
+        "ScientificName": "Diplodocus carnegii",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/diplo.png"
+      },
+      {
+        "Id": "j5",
+        "CommonName": "Цератозавр",
+        "ScientificName": "Ceratosaurus nasicornis",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/cerato.png"
+      },
+      {
+        "Id": "j6",
+        "CommonName": "Птеродактиль",
+        "ScientificName": "Pterodactylus antiquus",
+        "Type": "Літаючий",
+        "Image": "/Images/Organisms/ptero.png"
+      },
+      {
+        "Id": "j7",
+        "CommonName": "Диморфодон",
+        "ScientificName": "Dimorphodon macronyx",
+        "Type": "Літаючий",
+        "Image": "/Images/Organisms/dimor.png"
+      },
+      {
+        "Id": "j8",
+        "CommonName": "Пліозавр",
+        "ScientificName": "Pliosaurus",
+        "Type": "Морський хижак",
+        "Image": "/Images/Organisms/plio.png"
+      },
+      {
+        "Id": "j9",
+        "CommonName": "Плезіозавр",
+        "ScientificName": "Plesiosaurus dolichodeirus",
+        "Type": "Морський хижак",
+        "Image": "/Images/Organisms/plesio.png" 
+      }
+    ]
+  },
+  {
+    "Id": "cretaceous",
+    "Era": "Мезозой",
+    "Name": "Крейдовий період",
+    "Timeframe": "145 – 66 млн років тому",
+    "MainImage": "/Images/Backgrounds/cretaceo.jpg",
+    "Description": "Крейдовий період став найтривалішим у Мезозойській ері та завершився найвідомішим масовим вимиранням. Континенти продовжували віддалятися один від одного, набуваючи обрисів, близьких до сучасних. Рівень світового океану був дуже високим, що призвело до утворення величезних внутрішніх морів. Саме накопичення залишків мікроскопічних водоростей з вапняковими панцирами у цих морях утворило товщі крейди, які й дали назву періоду.\n\nНайважливішою подією Крейди стала поява і стрімке поширення покритонасінних (квіткових) рослин, хоча серед хребетних продовжували безроздільно панувати рептилії. Динозаври досягли максимального розмаїття: на рівнинах паслися стада рогатих трицератопсів та броньованих анкілозаврів, а на вершині харчового ланцюга стояв тиранозавр. Період раптово закінчився 66 млн років тому падінням гігантського астероїда (кратер Чіксулуб), що спричинило масове вимирання.",
+    "Organisms": [
+      {
+        "Id": "c1",
+        "CommonName": "Тиранозавр Рекс",
+        "ScientificName": "Tyrannosaurus rex",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/trex.png"
+      },
+      {
+        "Id": "c2",
+        "CommonName": "Трицератопс",
+        "ScientificName": "Triceratops horridus",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/triceratops.png"
+      },
+      {
+        "Id": "c3",
+        "CommonName": "Велоцираптор",
+        "ScientificName": "Velociraptor mongoliensis",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/velociraptor.png"
+      },
+      {
+        "Id": "c4",
+        "CommonName": "Спинозавр",
+        "ScientificName": "Spinosaurus aegyptiacus",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/spinosaurus.png"
+      },
+      {
+        "Id": "c5",
+        "CommonName": "Анкілозавр",
+        "ScientificName": "Ankylosaurus magniventris",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/ankylosaurus.png"
+      },
+      {
+        "Id": "c6",
+        "CommonName": "Паразауролоф",
+        "ScientificName": "Parasaurolophus walkeri",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/parasaurolophus.png"
+      },
+      {
+        "Id": "c7",
+        "CommonName": "Птеранодон",
+        "ScientificName": "Pteranodon longiceps",
+        "Type": "Літаючий",
+        "Image": "/Images/Organisms/pteranodon.png"
+      },
+      {
+        "Id": "c8",
+        "CommonName": "Кетцалькоатль",
+        "ScientificName": "Quetzalcoatlus northropi",
+        "Type": "Літаючий",
+        "Image": "/Images/Organisms/quetzalcoatlus.png"
+      },
+      {
+        "Id": "c9",
+        "CommonName": "Мозазавр",
+        "ScientificName": "Mosasaurus hoffmannii",
+        "Type": "Морський хижак",
+        "Image": "/Images/Organisms/mosasaurus.png"
+      }
+    ]
+  },
+  {
+    "Id": "paleogene",
+    "Era": "Кайнозой",
+    "Name": "Палеогеновий період",
+    "Timeframe": "66 – 23 млн років тому",
+    "MainImage": "/Images/Backgrounds/paleo.jpg",
+    "Description": "Палеоген — це світанок Кайнозойської ери, час відновлення життя після катастрофи, що знищила динозаврів. Зникнення гігантських рептилій звільнило безліч екологічних ніш, які почали стрімко заповнювати вцілілі ссавці та птахи. Клімат на початку періоду був тропічним, навіть на полюсах не було льоду, а в Арктиці росли пальми.\n\nСсавці, які раніше були розміром із щура, почали еволюціонувати в різноманітні форми. З'явилися перші предки коней, носорогів, слонів та приматів. Цікаво, що на початку Палеогену вершину харчового ланцюга на суші займали не ссавці, а гігантські нелітаючі хижі птахи (наприклад, гасторніс). В океанах предки китів (базилозаври), які повернулися з суші у воду, стали новими морськими хижаками. Наприкінці періоду розпочалося значне похолодання клімату.",
+    "Organisms": [
+      {
+        "Id": "p1",
+        "CommonName": "Базилозавр",
+        "ScientificName": "Basilosaurus",
+        "Type": "Морський хижак",
+        "Image": "/Images/Organisms/basilosaurus.png"
+      },
+      {
+        "Id": "p2",
+        "CommonName": "Гасторніс",
+        "ScientificName": "Gastornis",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/gastornis.png"
+      },
+      {
+        "Id": "p3",
+        "CommonName": "Індрикотерій",
+        "ScientificName": "Paraceratherium",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/paraceratherium.png"
+      },
+      {
+        "Id": "p4",
+        "CommonName": "Ендрюсарх",
+        "ScientificName": "Andrewsarchus mongoliensis",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/andrewsarchus.png"
+      },
+      {
+        "Id": "p5",
+        "CommonName": "Гіракотерій",
+        "ScientificName": "Hyracotherium",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/hyracotherium.png"
+      },
+      {
+        "Id": "p6",
+        "CommonName": "Мезогіппус",
+        "ScientificName": "Mesohippus",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/mesohippus.png"
+      },
+      {
+        "Id": "p7",
+        "CommonName": "Титанобоа",
+        "ScientificName": "Titanoboa cerrejonensis",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/titanoboa.png"
+      },
+      {
+        "Id": "p8",
+        "CommonName": "Мерітерій",
+        "ScientificName": "Moeritherium",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/moeritherium.png"
+      },
+      {
+        "Id": "p9",
+        "CommonName": "Амбулоцет",
+        "ScientificName": "Ambulocetus natans",
+        "Type": "Напівводний хижак",
+        "Image": "/Images/Organisms/ambulocetus.png"
+      }
+    ]
+  },
+  {
+    "Id": "neogene",
+    "Era": "Кайнозой",
+    "Name": "Неогеновий період",
+    "Timeframe": "23 – 2.5 млн років тому",
+    "MainImage": "/Images/Backgrounds/neog.jpg",
+    "Description": "У Неогені Земля набула майже сучасного вигляду. Континенти зайняли свої нинішні позиції, відбулося зіткнення Індії з Азією, що призвело до підняття Гімалаїв. Глобальне похолодання тривало, льодовикові шапки на полюсах продовжували розростатися. Через це клімат став сухішим, площі тропічних лісів різко скоротилися, а на їхньому місці виникли безкрайні степи та савани.\n\nПоширення злакових степів стимулювало еволюцію травоїдних ссавців — з'явилися величезні стада предків сучасних коней, антилоп, биків та оленів. Їх переслідували нові спеціалізовані хижаки — шаблезубі коти та предки вовків (собачі). У морях панував мегалодон — найбільша хижа акула всіх часів. Найважливішою подією для нас стала еволюція приматів в Африці: ліси рідшали, змушуючи предків людини (наприклад, австралопітеків) спуститися з дерев, вийти в савану і стати на дві ноги.",
+    "Organisms": [
+      {
+        "Id": "n1",
+        "CommonName": "Смілодон (Шаблезубий кіт)",
+        "ScientificName": "Smilodon populator",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/smilodon.png"
+      },
+      {
+        "Id": "n2",
+        "CommonName": "Мегалодон",
+        "ScientificName": "Otodus megalodon",
+        "Type": "Морський хижак",
+        "Image": "/Images/Organisms/megalodon.png"
+      },
+      {
+        "Id": "n3",
+        "CommonName": "Австралопітек",
+        "ScientificName": "Australopithecus afarensis",
+        "Type": "Примат",
+        "Image": "/Images/Organisms/australopithecus.png"
+      },
+      {
+        "Id": "n4",
+        "CommonName": "Мегатерій",
+        "ScientificName": "Megatherium americanum",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/megatherium.png"
+      },
+      {
+        "Id": "n5",
+        "CommonName": "Дейнотерій",
+        "ScientificName": "Deinotherium",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/deinotherium.png"
+      },
+      {
+        "Id": "n6",
+        "CommonName": "Халікотерій",
+        "ScientificName": "Chalicotherium",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/chalicotherium.png"
+      },
+      {
+        "Id": "n7",
+        "CommonName": "Платибелодон",
+        "ScientificName": "Platybelodon",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/platybelodon.png"
+      },
+      {
+        "Id": "n8",
+        "CommonName": "Сиватерій",
+        "ScientificName": "Sivatherium",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/sivatherium.png"
+      },
+      {
+        "Id": "n9",
+        "CommonName": "Фороракос",
+        "ScientificName": "Phorusrhacos longissimus",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/phorusrhacos.png"
+      }
+    ]
+  },
+  {
+    "Id": "anthropogene",
+    "Era": "Кайнозой",
+    "Name": "Антропогеновий період",
+    "Timeframe": "2.5 млн років тому – н.ч",
+    "MainImage": "/Images/Backgrounds/anthropo.jpg",
+    "Description": "Антропоген (Четвертинний період) — найкоротший, але найважливіший для нас геологічний період, оскільки саме в цей час сформувалася людина. Він характеризується серією різких кліматичних коливань — льодовикових епох (зледенінь) та міжльодовикові періодів потепління. Величезні льодовикові щити неодноразово покривали Північну Америку та Євразію, значно знижуючи рівень світового океану.\n\nТваринний світ адаптувався до холодного клімату: виникла так звана «мамонтова фауна» (шерстисті мамонти, волохаті носороги, печерні ведмеді та леви). Однак головною подією періоду є еволюція роду Homo (Людина). Від видів, що навчилися виготовляти перші кам'яні знаряддя, до Homo sapiens, який завдяки розвитку інтелекту зміг заселити всі континенти. Наприкінці останнього зледеніння більшість представників мегафауни вимерла — частково через зміну клімату, а частково через полювання первісних людей.",
+    "Organisms": [
+      {
+        "Id": "a1",
+        "CommonName": "Шерстистий мамонт",
+        "ScientificName": "Mammuthus primigenius",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/mammoth.png"
+      },
+      {
+        "Id": "a2",
+        "CommonName": "Волохатий носоріг",
+        "ScientificName": "Coelodonta antiquitatis",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/woolly_rhino.png"
+      },
+      {
+        "Id": "a3",
+        "CommonName": "Печерний ведмідь",
+        "ScientificName": "Ursus spelaeus",
+        "Type": "Всеїдний",
+        "Image": "/Images/Organisms/cave_bear.png"
+      },
+      {
+        "Id": "a4",
+        "CommonName": "Печерний лев",
+        "ScientificName": "Panthera spelaea",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/cave_lion.png"
+      },
+      {
+        "Id": "a5",
+        "CommonName": "Жахливий вовк",
+        "ScientificName": "Canis dirus",
+        "Type": "Хижак",
+        "Image": "/Images/Organisms/dire_wolf.png"
+      },
+      {
+        "Id": "a6",
+        "CommonName": "Великорогий олень",
+        "ScientificName": "Megaloceros giganteus",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/megaloceros.png"
+      },
+      {
+        "Id": "a7",
+        "CommonName": "Гліптодон",
+        "ScientificName": "Glyptodon",
+        "Type": "Травоїдний",
+        "Image": "/Images/Organisms/glyptodon.png"
+      },
+      {
+        "Id": "a8",
+        "CommonName": "Неандерталець",
+        "ScientificName": "Homo neanderthalensis",
+        "Type": "Примат",
+        "Image": "/Images/Organisms/neanderthal.png"
+      },
+      {
+        "Id": "a9",
+        "CommonName": "Людина розумна",
+        "ScientificName": "Homo sapiens",
+        "Type": "Примат",
+        "Image": "/Images/Organisms/human.png"
       }
     ]
   }

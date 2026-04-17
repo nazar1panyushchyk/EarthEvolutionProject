@@ -15,18 +15,18 @@
         <RowDefinition Height="130"/>
     </Grid.RowDefinitions>
 
-    <Border Grid.Row="0" Background="#1A1A1A" BorderBrush="#333" BorderThickness="0,0,0,2">
+        <Border Grid.Row="0" Background="#0a3261" BorderBrush="#333" BorderThickness="0,0,0,2">
         <DockPanel Margin="20,0">
             <TextBlock Text="РОЗВИТОК ЖИТТЯ НА ЗЕМЛІ" 
-                   Foreground="#00D4FF" 
+                   Foreground="#FFFFFF" 
                    FontSize="22" 
-                   FontWeight="Bold" 
+                    FontWeight="SemiBold"
                    VerticalAlignment="Center"/>
 
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right">
                 <TextBox Width="200" Height="30" VerticalContentAlignment="Center" 
-                     Text="Пошук виду..." Foreground="Gray" Margin="0,0,10,0"/>
-                <Button Content="Фільтри" Width="90" Height="30" Background="#333" Foreground="White"/>
+                     Text="Пошук..." Background="#333" Foreground="Gray" Margin="0,0,10,0" FontSize="14"/>
+                <Button Content="Фільтри" Width="90" Height="30" Background="Transparent" Foreground="White" BorderThickness="0"  Click="Button_Click"/>
             </StackPanel>
         </DockPanel>
     </Border>
@@ -37,53 +37,323 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Background="#1E1E1E" CornerRadius="15" Padding="25" Margin="0,0,20,0">
-                <StackPanel>
-                    <TextBlock Text="Юрський період" Foreground="White" FontSize="38" FontWeight="ExtraBold"/>
-                    <TextBlock Text="201 – 145 млн років тому" Foreground="#00D4FF" FontSize="18" Margin="0,5,0,25" Opacity="0.8"/>
+            <Border Grid.Column="0" Background="#1E1E1E" CornerRadius="15" Padding="20,15,20,20" Margin="0,0,20,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
 
-                    <Border CornerRadius="12" ClipToBounds="True" Height="280">
-                        <TextBlock Text="Тут буде зображення ландшафту" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,10">
+                        <TextBlock Text="{Binding Name}" Foreground="White" FontSize="24" FontWeight="Medium" DockPanel.Dock="Left"/>
+                        <TextBlock Text="{Binding Timeframe}" Foreground="White" FontSize="22" VerticalAlignment="Bottom" Margin="0,0,0,8" DockPanel.Dock="Right"/>
+                    </DockPanel>
+
+                    <Border Grid.Row="1" CornerRadius="20" ClipToBounds="True" Background="#151515">
+                        <Image Source="{Binding MainImage}" 
+                            Stretch="UniformToFill"
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"/>
                     </Border>
 
-                    <TextBlock Text="Опис епохи" Foreground="Gray" FontSize="12" Margin="0,20,0,5" TextAlignment="Left" FontWeight="Bold"/>
-                    <TextBlock Text="Тут буде твій великий текст з опису предметної області..." 
-                   Foreground="#DCDCDC" FontSize="15" TextWrapping="Wrap" LineHeight="22"/>
-                </StackPanel>
+                    <TextBlock Grid.Row="2" Text="Опис:" Foreground="White" FontSize="14" Margin="0,10,0,5" FontWeight="Bold" />
+
+                    <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding Description}" 
+                       Foreground="#DCDCDC" 
+                       FontSize="15" 
+                       TextWrapping="Wrap" 
+                       LineHeight="22"/>
+                    </ScrollViewer>
+                </Grid>
             </Border>
 
-            <Border Grid.Column="1" Background="#1A1A1A" CornerRadius="15" Padding="15">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="ПРЕДСТАВНИКИ ЕПОХИ" Foreground="White" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,10"/>
+            <Border Grid.Column="1" Background="#1A1A1A" CornerRadius="15" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                    <UniformGrid Grid.Row="1" Columns="2">
-                        <Border Background="#333" Margin="5" CornerRadius="8">
-                            <TextBlock Text="Динозавр 1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border Background="#333" Margin="5" CornerRadius="8">
-                            <TextBlock Text="Динозавр 2" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border Background="#333" Margin="5" CornerRadius="8">
-                            <TextBlock Text="Динозавр 3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border Background="#333" Margin="5" CornerRadius="8">
-                            <TextBlock Text="Динозавр 4" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </UniformGrid>
+                    <TextBlock Text="ГАЛЕРЕЯ ВИДІВ" Foreground="White" FontSize="18" FontWeight="Light" Margin="5,0,0,10"/>
+
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Organisms}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#252525" CornerRadius="8" Margin="4" Padding="6">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Image Grid.Row="0" Source="{Binding Image}" 
+                                   Stretch="Uniform" 
+                                   MaxHeight="120"
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Center"/>
+
+                                        <StackPanel Grid.Row="1" Margin="0,5,0,0">
+                                            <TextBlock Text="{Binding CommonName}" 
+                                           Foreground="White" 
+                                           FontSize="11" 
+                                           FontWeight="Bold" 
+                                           TextAlignment="Center" 
+                                           TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Type}" 
+                                           Foreground="#A4C639" 
+                                           FontSize="9" 
+                                           TextAlignment="Center" 
+                                           Margin="0,1,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
+            </Border>
+        </Grid>
+        <Border Grid.Row="2" Background="#1A1A1A" BorderBrush="#333" BorderThickness="0,2,0,0">
+            <Grid Margin="15,12,15,12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="55"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="#3E1F52" Margin="1,0" CornerRadius="2">
+                        <TextBlock Text="МЕЗОЗОЙ" Foreground="White" FontSize="12" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="#1B3A57" Margin="1,0" CornerRadius="2">
+                        <TextBlock Text="КАЙНОЗОЙ" Foreground="White" FontSize="12" 
+                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+
+                <UniformGrid Grid.Row="2" Columns="6">
+
+                    <Button x:Name="BtnTriassic"
+            Background="#4B4054"
+            Tag="triassic"
+            Click="PeriodButton_Click"
+            MouseEnter="PeriodButton_MouseEnter"
+            MouseLeave="PeriodButton_MouseLeave"
+            BorderBrush="Transparent"
+            BorderThickness="3"
+            Margin="2,0"
+            Padding="0"
+            SnapsToDevicePixels="True">
+                        <Grid ClipToBounds="False">
+                            <Path x:Name="ArrowTriassic"
+                  Data="M 0,0 L 18,0 L 9,11 Z"
+                  Fill="#E6E6D8"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Top"
+                  Margin="0,-10,0,0"
+                  Visibility="Collapsed"/>
+                            <StackPanel VerticalAlignment="Center" Margin="0,6">
+                                <TextBlock x:Name="TextTriassic"
+                           Text="ТРІАСОВИЙ"
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="252 – 201.3 млн років тому"
+                           Foreground="#E0E0E0"
+                           FontSize="10"
+                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button x:Name="BtnJurassic"
+            Background="#2B7793"
+            Tag="jurassic"
+            Click="PeriodButton_Click"
+            MouseEnter="PeriodButton_MouseEnter"
+            MouseLeave="PeriodButton_MouseLeave"
+            BorderBrush="#A7BE4B"
+            BorderThickness="3"
+            Margin="2,0"
+            Padding="0"
+            SnapsToDevicePixels="True">
+                        <Grid ClipToBounds="False">
+                            <Path x:Name="ArrowJurassic"
+                  Data="M 0,0 L 18,0 L 9,11 Z"
+                  Fill="#E6E6D8"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Top"
+                  Margin="0,-10,0,0"
+                  Visibility="Visible"/>
+                            <StackPanel VerticalAlignment="Center" Margin="0,6">
+                                <TextBlock x:Name="TextJurassic"
+                           Text="ЮРСЬКИЙ"
+                           Foreground="White"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="201.3 – 145 млн років тому"
+                           Foreground="#E0E0E0"
+                           FontSize="10"
+                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button x:Name="BtnCretaceous"
+            Background="#6D8444"
+            Tag="cretaceous"
+            Click="PeriodButton_Click"
+            MouseEnter="PeriodButton_MouseEnter"
+            MouseLeave="PeriodButton_MouseLeave"
+            BorderBrush="Transparent"
+            BorderThickness="3"
+            Margin="2,0"
+            Padding="0"
+            SnapsToDevicePixels="True">
+                        <Grid ClipToBounds="False">
+                            <Path x:Name="ArrowCretaceous"
+                  Data="M 0,0 L 18,0 L 9,11 Z"
+                  Fill="#E6E6D8"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Top"
+                  Margin="0,-10,0,0"
+                  Visibility="Collapsed"/>
+                            <StackPanel VerticalAlignment="Center" Margin="0,6">
+                                <TextBlock x:Name="TextCretaceous"
+                           Text="КРЕЙДОВИЙ"
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="145 – 66 млн років тому"
+                           Foreground="#E0E0E0"
+                           FontSize="10"
+                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button x:Name="BtnPaleogene"
+            Background="#915832"
+            Tag="paleogene"
+            Click="PeriodButton_Click"
+            MouseEnter="PeriodButton_MouseEnter"
+            MouseLeave="PeriodButton_MouseLeave"
+            BorderBrush="Transparent"
+            BorderThickness="3"
+            Margin="2,0"
+            Padding="0"
+            SnapsToDevicePixels="True">
+                        <Grid ClipToBounds="False">
+                            <Path x:Name="ArrowPaleogene"
+                  Data="M 0,0 L 18,0 L 9,11 Z"
+                  Fill="#E6E6D8"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Top"
+                  Margin="0,-10,0,0"
+                  Visibility="Collapsed"/>
+                            <StackPanel VerticalAlignment="Center" Margin="0,6">
+                                <TextBlock x:Name="TextPaleogene"
+                           Text="ПАЛЕОГЕН"
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="66 – 23 млн років тому"
+                           Foreground="#E0E0E0"
+                           FontSize="10"
+                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button x:Name="BtnNeogene"
+            Background="#A58934"
+            Tag="neogene"
+            Click="PeriodButton_Click"
+            MouseEnter="PeriodButton_MouseEnter"
+            MouseLeave="PeriodButton_MouseLeave"
+            BorderBrush="Transparent"
+            BorderThickness="3"
+            Margin="2,0"
+            Padding="0"
+            SnapsToDevicePixels="True">
+                        <Grid ClipToBounds="False">
+                            <Path x:Name="ArrowNeogene"
+                  Data="M 0,0 L 18,0 L 9,11 Z"
+                  Fill="#E6E6D8"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Top"
+                  Margin="0,-10,0,0"
+                  Visibility="Collapsed"/>
+                            <StackPanel VerticalAlignment="Center" Margin="0,6">
+                                <TextBlock x:Name="TextNeogene"
+                           Text="НЕОГЕН"
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="23 – 2.5 млн років тому"
+                           Foreground="#E0E0E0"
+                           FontSize="10"
+                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button x:Name="BtnAnthropogene"
+            Background="#73808C"
+            Tag="anthropogene"
+            Click="PeriodButton_Click"
+             MouseEnter="PeriodButton_MouseEnter"
+             MouseLeave="PeriodButton_MouseLeave"
+            BorderBrush="Transparent"
+            BorderThickness="3"
+            Margin="2,0"
+            Padding="0"
+            SnapsToDevicePixels="True">
+                        <Grid ClipToBounds="False">
+                            <Path x:Name="ArrowAnthropogene"
+                  Data="M 0,0 L 18,0 L 9,11 Z"
+                  Fill="#E6E6D8"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Top"
+                  Margin="0,-10,0,0"
+                  Visibility="Collapsed"/>
+                            <StackPanel VerticalAlignment="Center" Margin="0,6">
+                                <TextBlock x:Name="TextAnthropogene"
+                           Text="АНТРОПОГЕН"
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="2.5 млн років – н.ч."
+                           Foreground="#E0E0E0"
+                           FontSize="10"
+                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                </UniformGrid>
+            </Grid>
         </Border>
     </Grid>
-    <Border Grid.Row="2" Background="#131313" BorderBrush="#333" BorderThickness="0,2,0,0">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Тріасовий" Width="120" Height="80" Margin="10" Background="#E67E22" Foreground="White" FontWeight="Bold"/>
-            <Button Content="Юрський" Width="120" Height="80" Margin="10" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderBrush="White" BorderThickness="2"/>
-            <Button Content="Крейдовий" Width="120" Height="80" Margin="10" Background="#2980B9" Foreground="White" FontWeight="Bold"/>
-            <Button Content="Палеоген" Width="120" Height="80" Margin="10" Background="#8E44AD" Foreground="White" FontWeight="Bold"/>
-        </StackPanel>
-    </Border>
-</Grid>
 </Window>

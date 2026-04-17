@@ -10,6 +10,16 @@
 
   <ItemGroup>
     <None Remove="Data\evolution_data.json" />
+    <None Remove="Images\Backgrounds\anthropo.jpg" />
+    <None Remove="Images\Backgrounds\anthropogene%281%29.jpg" />
+    <None Remove="Images\Backgrounds\cretaceo.jpg" />
+    <None Remove="Images\Backgrounds\jurassic.jpeg" />
+    <None Remove="Images\Backgrounds\neog.jpg" />
+    <None Remove="Images\Backgrounds\neogene%281%29.jpg" />
+    <None Remove="Images\Backgrounds\paleo.jpg" />
+    <None Remove="Images\Backgrounds\triass.jpg" />
+    <None Remove="Images\Organisms\diplo.png" />
+    <None Remove="Images\Organisms\plesio.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,9 +29,41 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Services\" />
     <Folder Include="ViewsModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Backgrounds\anthropo.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Backgrounds\anthropogene(1).jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Backgrounds\cretaceo.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Backgrounds\jurassic.jpeg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Backgrounds\neog.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Backgrounds\neogene(1).jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Backgrounds\paleo.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Backgrounds\triass.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Organisms\diplo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Organisms\plesio.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
