@@ -6,20 +6,42 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Controls\OrganismCardView.xaml" />
+    <None Remove="Controls\TimelineButton.xaml" />
     <None Remove="Data\evolution_data.json" />
     <None Remove="Images\Backgrounds\anthropo.jpg" />
-    <None Remove="Images\Backgrounds\anthropogene%281%29.jpg" />
+    <None Remove="Images\Backgrounds\anthropogene(1).jpg" />
     <None Remove="Images\Backgrounds\cretaceo.jpg" />
     <None Remove="Images\Backgrounds\jurassic.jpeg" />
     <None Remove="Images\Backgrounds\neog.jpg" />
-    <None Remove="Images\Backgrounds\neogene%281%29.jpg" />
     <None Remove="Images\Backgrounds\paleo.jpg" />
     <None Remove="Images\Backgrounds\triass.jpg" />
+    <None Remove="Images\Organisms\allo.png" />
+    <None Remove="Images\Organisms\brachio.png" />
+    <None Remove="Images\Organisms\cerato.png" />
+    <None Remove="Images\Organisms\dimor.png" />
     <None Remove="Images\Organisms\diplo.png" />
+    <None Remove="Images\Organisms\liop.png" />
     <None Remove="Images\Organisms\plesio.png" />
+    <None Remove="Images\Organisms\ptero.png" />
+    <None Remove="Images\Organisms\stego.png" />
+    <None Remove="Images\Organisms\Triassic\coelo.png" />
+    <None Remove="Images\Organisms\Triassic\eoraptor.png" />
+    <None Remove="Images\Organisms\Triassic\eudi.png" />
+    <None Remove="Images\Organisms\Triassic\herrer.png" />
+    <None Remove="Images\Organisms\Triassic\ichthyo.png" />
+    <None Remove="Images\Organisms\Triassic\lystro.png" />
+    <None Remove="Images\Organisms\Triassic\notho.png" />
+    <None Remove="Images\Organisms\Triassic\plateo.png" />
+    <None Remove="Images\Organisms\Triassic\posto.png" />
+    <None Remove="MainWindow.xaml" />
+    <None Remove="Views\PeriodDetailsView.xaml" />
+    <None Remove="Views\PeriodsTimelineView.xaml" />
+    <None Remove="Views\SpeciesGalleryView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,42 +50,41 @@
     </Content>
   </ItemGroup>
 
+ 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="ViewsModels\" />
+    <Resource Include="Images\Backgrounds\**\*.*">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Organisms\**\*.*">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
+ 
   <ItemGroup>
-    <Resource Include="Images\Backgrounds\anthropo.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Backgrounds\anthropogene(1).jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Backgrounds\cretaceo.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Backgrounds\jurassic.jpeg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Backgrounds\neog.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Backgrounds\neogene(1).jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Backgrounds\paleo.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Backgrounds\triass.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Organisms\diplo.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Organisms\plesio.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Page Include="Controls\OrganismCardView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TimelineButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml" />
+    <Page Include="Views\PeriodDetailsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PeriodsTimelineView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SpeciesGalleryView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <Compile Update="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

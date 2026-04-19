@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="EarthEvolutionProject.Views.SpeciesGalleryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:EarthEvolutionProject.Views"
+             xmlns:controls="clr-namespace:EarthEvolutionProject.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <Border Background="#1A1A1A" CornerRadius="15" Padding="12">
+        <Grid>
+            <Grid x:Name="GalleryListState" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="ГАЛЕРЕЯ ВИДІВ" Foreground="White" FontSize="18" FontWeight="Light" Margin="5,0,0,10"/>
+
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Organisms}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:OrganismCardView Cursor="Hand" PreviewMouseDown="OrganismCard_MouseDown"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+
+            <Grid x:Name="SpeciesDetailState" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Button Content="← Назад до галереї" Click="BackToList_Click"
+                        Background="Transparent" Foreground="#A4C639" BorderThickness="0" 
+                        HorizontalAlignment="Left" FontSize="12" Margin="0,0,0,10" Cursor="Hand"/>
+
+                <Border Grid.Row="1" 
+        Background="#252525" 
+        CornerRadius="12" 
+        Height="200" 
+        Margin="0,0,0,20" 
+        ClipToBounds="True">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.3" ShadowDepth="2"/>
+                    </Border.Effect>
+
+                    <Image x:Name="DetailImage" 
+           Stretch="Uniform" 
+           VerticalAlignment="Center"
+           HorizontalAlignment="Center"
+           RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Border>
+
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock x:Name="DetailCommonName" Foreground="White" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="DetailScientificName" Foreground="#888" FontSize="13" FontStyle="Italic" Margin="0,2,10,15"/>
+
+                        <Grid Margin="0,0,10,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="ТИП" Foreground="#A4C639" FontSize="9" FontWeight="Bold"/>
+                                <TextBlock x:Name="DetailType" Foreground="White" FontSize="12" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="ПЕРІОД" Foreground="#A4C639" FontSize="9" FontWeight="Bold"/>
+                                <TextBlock x:Name="DetailExistence" Foreground="White" FontSize="12" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="СПОСІБ ЖИТТЯ" Foreground="#A4C639" FontSize="9" FontWeight="Bold" Margin="0,0,10,5"/>
+                        <TextBlock x:Name="DetailLifestyle" Foreground="#DCDCDC" FontSize="13" TextWrapping="Wrap" LineHeight="18" Margin="0,0,10,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

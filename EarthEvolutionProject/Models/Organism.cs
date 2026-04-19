@@ -7,4 +7,6 @@ public class Organism
     public required string ScientificName { get; set; }
     public required string Type { get; set; }
     public required string Image { get; set; }
+    public string Existence { get; set; } = "";
+    public string Lifestyle { get; set; } = "";
 }
