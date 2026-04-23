@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="EarthEvolutionProject.Views.SearchResultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource PrimaryBackgroundBrush}">
+    <Grid>
+        <TextBlock x:Name="EmptyMessage" 
+                   Text="За вашим запитом істот не знайдено 🦕" 
+                   Foreground="{DynamicResource SecondaryTextBrush}" 
+                   FontSize="20" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" 
+                   Visibility="Collapsed"/>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      CanContentScroll="True">
+            <ItemsControl x:Name="ResultsItemsControl" 
+                         Margin="10,20,10,20" 
+                         HorizontalAlignment="Center">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" 
+                                  HorizontalAlignment="Center" 
+                                  ItemWidth="190" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
+                                CornerRadius="10" 
+                                Margin="8" 
+                                Width="170" 
+                                Height="200"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1"
+                                MouseUp="OnCardClicked" 
+                                Cursor="Hand"
+                                x:Name="CardBorder">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="120"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Background="{DynamicResource PrimaryBackgroundBrush}" CornerRadius="10,10,0,0" Padding="8">
+                                    <Image Source="{Binding Image}" 
+                                           Stretch="Uniform"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"/>
+                                </Border>
+
+                                <StackPanel Grid.Row="1">
+                                    <TextBlock Text="{Binding CommonName}" 
+                                               Foreground="{DynamicResource PrimaryTextBrush}" 
+                                               FontSize="12" 
+                                               FontWeight="Bold" 
+                                               TextTrimming="CharacterEllipsis"
+                                               Margin="10,10,10,2"/>
+
+                                    <TextBlock Text="{Binding ScientificName}" 
+                                               Foreground="{DynamicResource SecondaryTextBrush}" 
+                                               FontSize="10" 
+                                               FontStyle="Italic" 
+                                               TextTrimming="CharacterEllipsis"
+                                               Margin="10,0,10,5"/>
+
+                                    <Border BorderBrush="{DynamicResource BorderBrush}" 
+                                            BorderThickness="0,1,0,0" 
+                                            Margin="10,5,10,0">
+                                        <TextBlock FontSize="10" 
+                                                   FontWeight="SemiBold"
+                                                   Margin="0,5,0,0">
+                                            <Run Text="{Binding Type}" Foreground="{DynamicResource AccentBlueBrush}"/>
+                                            <Run Text=" | " Foreground="{DynamicResource BorderBrush}"/>
+                                            <Run Text="{Binding PeriodName}" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        </TextBlock>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <DataTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="{DynamicResource HoverBackgroundBrush}"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="{DynamicResource AccentBlueBrush}"/>
+                                <Setter TargetName="CardBorder" Property="BorderThickness" Value="1"/>
+                            </Trigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

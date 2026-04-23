@@ -14,6 +14,10 @@ using System.Windows.Shapes;
 
 namespace EarthEvolutionProject.Views
 {
+    /// <summary>
+    /// Користувацький елемент керування, що представляє галерею біологічних видів. 
+    /// Забезпечує відображення списку організмів та перегляд детальної інформації про обрану істоту.
+    /// </summary>
     public partial class SpeciesGalleryView : UserControl
     {
         public SpeciesGalleryView()
@@ -21,6 +25,10 @@ namespace EarthEvolutionProject.Views
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Обробляє натискання на картку організму. Витягує дані з контексту об'єкта та 
+        /// перемикає інтерфейс у режим відображення детальної інформації.
+        /// </summary>
         private void OrganismCard_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is FrameworkElement element && element.DataContext != null)
@@ -61,6 +69,10 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Допоміжний метод для безпечного отримання значень властивостей об'єкта. 
+        /// Підтримує роботу як зі звичайними класами C#, так і з динамічними елементами JsonElement.
+        /// </summary>
         private string? GetPropertyValue(object obj, string propertyName)
         {
             try
@@ -76,21 +88,81 @@ namespace EarthEvolutionProject.Views
                     return value.GetString();
                 }
             }
-            catch { }
+            catch(Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"Помилка доступу до властивості {propertyName}: {ex.Message}");
+            }
 
             return null;
         }
 
+        /// <summary>
+        /// Обробник події натискання кнопки повернення. Приховує панель деталей та 
+        /// повертає користувача до загального списку галереї.
+        /// </summary>
         private void BackToList_Click(object sender, RoutedEventArgs e)
         {
             SpeciesDetailState.Visibility = Visibility.Collapsed;
             GalleryListState.Visibility = Visibility.Visible;
         }
-        
+
+        /// <summary>
+        /// Скидає стан модуля до початкового вигляду галереї, оновлюючи джерело даних 
+        /// відповідно до поточного обраного періоду.
+        /// </summary>
         public void ResetToGallery()
         {
+            if (this.DataContext is EarthEvolutionProject.Models.Period period)
+            {
+                SpeciesItemsControl.ItemsSource = period.Organisms;
+            }
+
             SpeciesDetailState.Visibility = Visibility.Collapsed;
             GalleryListState.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Відображає передану колекцію елементів у галереї. Використовується для 
+        /// виведення результатів фільтрації або пошуку.
+        /// </summary>
+        public void DisplayResults(System.Collections.IEnumerable items)
+        {
+            SpeciesItemsControl.ItemsSource = items;
+
+            SpeciesDetailState.Visibility = Visibility.Collapsed;
+            GalleryListState.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Примусово відкриває панель детальної інформації для конкретного об'єкта організму.
+        /// </summary>
+        public void ShowOrganismDetails(EarthEvolutionProject.Models.Organism organism)
+        {
+            if (organism == null) return;
+
+            DetailCommonName.Text = organism.CommonName;
+            DetailScientificName.Text = organism.ScientificName;
+            DetailType.Text = organism.Type;
+            DetailExistence.Text = organism.Existence;
+            DetailLifestyle.Text = organism.Lifestyle;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(organism.Image))
+                {
+                    DetailImage.Source = new BitmapImage(new Uri(organism.Image, UriKind.RelativeOrAbsolute));
+                }
+                else
+                {
+                    DetailImage.Source = null;
+                }
+            }
+            catch
+            {
+                DetailImage.Source = null;
+            }
+
+            GalleryListState.Visibility = Visibility.Collapsed;
+            SpeciesDetailState.Visibility = Visibility.Visible;
         }
     }
 }

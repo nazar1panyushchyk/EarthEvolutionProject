@@ -6,7 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d">
-    <Border Background="#1A1A1A" CornerRadius="15" Padding="12">
+    <Border Background="{DynamicResource SecondaryBackgroundBrush}" CornerRadius="15" Padding="12">
         <Grid>
             <Grid x:Name="GalleryListState" Visibility="Visible">
                 <Grid.RowDefinitions>
@@ -14,9 +14,9 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="ГАЛЕРЕЯ ВИДІВ" Foreground="White" FontSize="18" FontWeight="Light" Margin="5,0,0,10"/>
+                <TextBlock Text="ГАЛЕРЕЯ ВИДІВ" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18" FontWeight="Light" Margin="5,0,0,10"/>
 
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding Organisms}">
+                <ItemsControl x:Name="SpeciesItemsControl" Grid.Row="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="3"/>
@@ -39,30 +39,30 @@
                 </Grid.RowDefinitions>
 
                 <Button Content="← Назад до галереї" Click="BackToList_Click"
-                        Background="Transparent" Foreground="#A4C639" BorderThickness="0" 
+                        Background="Transparent" Foreground="{DynamicResource AccentBlueBrush}" BorderThickness="0" 
                         HorizontalAlignment="Left" FontSize="12" Margin="0,0,0,10" Cursor="Hand"/>
 
                 <Border Grid.Row="1" 
-        Background="#252525" 
-        CornerRadius="12" 
-        Height="200" 
-        Margin="0,0,0,20" 
-        ClipToBounds="True">
+                        Background="{DynamicResource PrimaryBackgroundBrush}" 
+                        CornerRadius="12" 
+                        Height="200" 
+                        Margin="0,0,0,20" 
+                        ClipToBounds="True">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.3" ShadowDepth="2"/>
                     </Border.Effect>
 
                     <Image x:Name="DetailImage" 
-           Stretch="Uniform" 
-           VerticalAlignment="Center"
-           HorizontalAlignment="Center"
-           RenderOptions.BitmapScalingMode="HighQuality"/>
+                           Stretch="Uniform" 
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
                 </Border>
 
                 <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock x:Name="DetailCommonName" Foreground="White" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,10,0"/>
-                        <TextBlock x:Name="DetailScientificName" Foreground="#888" FontSize="13" FontStyle="Italic" Margin="0,2,10,15"/>
+                        <TextBlock x:Name="DetailCommonName" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="DetailScientificName" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="13" FontStyle="Italic" Margin="0,2,10,15"/>
 
                         <Grid Margin="0,0,10,15">
                             <Grid.ColumnDefinitions>
@@ -71,18 +71,18 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="ТИП" Foreground="#A4C639" FontSize="9" FontWeight="Bold"/>
-                                <TextBlock x:Name="DetailType" Foreground="White" FontSize="12" Margin="0,2,0,0"/>
+                                <TextBlock Text="ТИП" Foreground="{DynamicResource AccentBlueBrush}" FontSize="9" FontWeight="Bold"/>
+                                <TextBlock x:Name="DetailType" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" Margin="0,2,0,0"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1">
-                                <TextBlock Text="ПЕРІОД" Foreground="#A4C639" FontSize="9" FontWeight="Bold"/>
-                                <TextBlock x:Name="DetailExistence" Foreground="White" FontSize="12" Margin="0,2,0,0"/>
+                                <TextBlock Text="ПЕРІОД" Foreground="{DynamicResource AccentBlueBrush}" FontSize="9" FontWeight="Bold"/>
+                                <TextBlock x:Name="DetailExistence" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Grid>
 
-                        <TextBlock Text="СПОСІБ ЖИТТЯ" Foreground="#A4C639" FontSize="9" FontWeight="Bold" Margin="0,0,10,5"/>
-                        <TextBlock x:Name="DetailLifestyle" Foreground="#DCDCDC" FontSize="13" TextWrapping="Wrap" LineHeight="18" Margin="0,0,10,0"/>
+                        <TextBlock Text="СПОСІБ ЖИТТЯ" Foreground="{DynamicResource AccentBlueBrush}" FontSize="9" FontWeight="Bold" Margin="0,0,10,5"/>
+                        <TextBlock x:Name="DetailLifestyle" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="13" TextWrapping="Wrap" LineHeight="18" Margin="0,0,10,0"/>
                     </StackPanel>
                 </ScrollViewer>
             </Grid>

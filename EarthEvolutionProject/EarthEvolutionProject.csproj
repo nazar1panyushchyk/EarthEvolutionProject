@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <ApplicationIcon>earthicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,12 +15,12 @@
     <None Remove="Controls\TimelineButton.xaml" />
     <None Remove="Data\evolution_data.json" />
     <None Remove="Images\Backgrounds\anthropo.jpg" />
-    <None Remove="Images\Backgrounds\anthropogene(1).jpg" />
     <None Remove="Images\Backgrounds\cretaceo.jpg" />
     <None Remove="Images\Backgrounds\jurassic.jpeg" />
     <None Remove="Images\Backgrounds\neog.jpg" />
     <None Remove="Images\Backgrounds\paleo.jpg" />
     <None Remove="Images\Backgrounds\triass.jpg" />
+    <None Remove="Images\Icon\earthicon.ico" />
     <None Remove="Images\Organisms\allo.png" />
     <None Remove="Images\Organisms\brachio.png" />
     <None Remove="Images\Organisms\cerato.png" />
@@ -39,8 +40,12 @@
     <None Remove="Images\Organisms\Triassic\plateo.png" />
     <None Remove="Images\Organisms\Triassic\posto.png" />
     <None Remove="MainWindow.xaml" />
+    <None Remove="Themes\DarkTheme.xaml" />
+    <None Remove="Themes\LightTheme.xaml" />
     <None Remove="Views\PeriodDetailsView.xaml" />
     <None Remove="Views\PeriodsTimelineView.xaml" />
+    <None Remove="Views\SearchBarView.xaml" />
+    <None Remove="Views\SearchResultsView.xaml" />
     <None Remove="Views\SpeciesGalleryView.xaml" />
   </ItemGroup>
 
@@ -48,6 +53,7 @@
     <Content Include="Data\evolution_data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="earthicon.ico" />
   </ItemGroup>
 
  
@@ -69,15 +75,32 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml" />
+    <Page Include="Themes\DarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PeriodDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PeriodsTimelineView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SearchBarView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchResultsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SpeciesGalleryView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+
+ 
+  <ItemGroup>
+    <Resource Include="Images\Icon\earthicon.ico" />
   </ItemGroup>
 
   

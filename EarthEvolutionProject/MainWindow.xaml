@@ -7,56 +7,80 @@
         xmlns:views="clr-namespace:EarthEvolutionProject.Views"
         mc:Ignorable="d"
         Title="Розвиток життя на Землі" Height="700" Width="1100"
+        Icon="/Images/Icon/earthicon.ico"
         WindowStartupLocation="CenterScreen">
 
-    <Grid Background="#252525">
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="65"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="130"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#0a3261" BorderBrush="#333" BorderThickness="0,0,0,2">
+        <Border Grid.Row="0" Background="{DynamicResource PrimaryBlueBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,2">
             <DockPanel Margin="20,0" LastChildFill="False">
                 <TextBlock DockPanel.Dock="Left" 
                    Text="РОЗВИТОК ЖИТТЯ НА ЗЕМЛІ" 
-                   Foreground="#FFFFFF" 
+                   Foreground="White"
                    FontSize="22" 
                    FontWeight="SemiBold" 
                    VerticalAlignment="Center"/>
 
-                <StackPanel DockPanel.Dock="Right" 
-                    Orientation="Horizontal" 
-                    VerticalAlignment="Center">
-                    <TextBox Width="200" 
-                     Height="30" 
-                     Text="Пошук..." 
-                     Background="#333" 
-                     Foreground="Gray" 
-                     Margin="0,0,10,0" 
-                     Padding="10,0" 
-                     VerticalContentAlignment="Center"/>
-                    <Button Content="Фільтри" 
-                    Width="90" 
-                    Height="30" 
-                    Background="Transparent" 
-                    Foreground="White" 
-                    BorderThickness="0" 
-                    BorderBrush="Transparent"/>
-                </StackPanel>
+                <Button x:Name="ThemeButton" 
+                DockPanel.Dock="Right"
+                Width="35" Height="35" 
+                Margin="10,0,0,0"
+                Cursor="Hand"
+                Click="ThemeButton_Click"
+                VerticalAlignment="Center">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="ThemeBorder" 
+                            Background="{DynamicResource SecondaryBackgroundBrush}" 
+                            CornerRadius="17.5" 
+                            BorderBrush="{DynamicResource BorderBrush}" 
+                            BorderThickness="1">
+                                <TextBlock x:Name="ThemeIcon" 
+                                   Text="🌙" 
+                                   Foreground="{DynamicResource PrimaryTextBrush}" 
+                                   FontSize="16" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ThemeBorder" Property="Background" Value="{DynamicResource AccentBlueBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <views:SearchBarView x:Name="MainSearchBar" 
+                     DockPanel.Dock="Right"
+                     VerticalAlignment="Center"
+                     FilterChanged="MainSearchBar_FilterChanged" />
             </DockPanel>
         </Border>
 
-        <Grid Grid.Row="1" Margin="20">
+        <Grid x:Name="MainContentGrid" Grid.Row="1" Margin="20" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.5*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <views:PeriodDetailsView Grid.Column="0" Margin="0,0,20,0"/>
+            <views:PeriodDetailsView x:Name="PeriodDetails" Grid.Column="0" Margin="0,0,20,0"/>
             <views:SpeciesGalleryView x:Name="SpeciesControl" Grid.Column="1"/>
         </Grid>
 
-        <Border Grid.Row="2" Background="#1A1A1A" BorderBrush="#333" BorderThickness="0,2,0,0">
+        <Grid x:Name="SearchResultsGrid" 
+            Grid.Row="1" 
+            Visibility="Collapsed" 
+            Background="{DynamicResource PrimaryBackgroundBrush}">
+            <views:SearchResultsView x:Name="SearchResultsPage" 
+                             AnimalSelected="OnSearchResultSelected"/>
+        </Grid>
+
+        <Border x:Name="TimelinePanel" Grid.Row="2" Background="{DynamicResource SecondaryBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,2,0,0">
             <Grid Margin="15,12,15,12">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20"/>
