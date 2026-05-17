@@ -1,4 +1,5 @@
 ﻿using EarthEvolutionProject.Models;
+using EarthEvolutionProject.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,22 +13,41 @@ namespace EarthEvolutionProject
 {
     public partial class MainWindow : Window
     {
+        private readonly Services.ProfileManager _profileManager;
         private List<Period> _allPeriods = [];
 
         /// <summary>
         /// Конструктор головного вікна застосунку. Виконує ініціалізацію компонентів інтерфейсу, 
         /// завантаження початкових даних та налаштування обробки події повернення з режиму пошуку.
         /// </summary>
-        public MainWindow()
+        public MainWindow(Services.ProfileManager profileManager)
         {
             InitializeComponent();
+            _profileManager = profileManager;
+
+            if (Application.Current is App app && _profileManager.CurrentProfile != null)
+            {
+                app.SetTheme(_profileManager.CurrentProfile.IsDarkTheme);
+            }
+
             InitializeAppData();
 
             MainSearchBar.BackRequested += (s, e) =>
             {
                 SearchResultsGrid.Visibility = Visibility.Collapsed;
-                MainContentGrid.Visibility = Visibility.Visible; 
+                MainContentGrid.Visibility = Visibility.Visible;
             };
+
+            SpeciesControl.OrganismSelected += (s, organism) =>
+            {
+                if (_profileManager.CurrentProfile != null)
+                {
+                    _profileManager.CurrentProfile.LastSelectedOrganismId = organism.Id;
+                    _profileManager.SaveConfiguration();
+                }
+            };
+
+            this.Closing += MainWindow_Closing;
         }
 
         /// <summary>
@@ -56,18 +76,18 @@ namespace EarthEvolutionProject
                 }
 
                 if (_allPeriods != null && _allPeriods.Any())
-                    {
+                {
                     var allTypes = _allPeriods
                         .SelectMany(p => p.Organisms)
-                        .Select(o => o.Type)        
+                        .Select(o => o.Type)
                         .Where(t => !string.IsNullOrEmpty(t))
-                        .Distinct()                 
-                        .OrderBy(t => t);       
+                        .Distinct()
+                        .OrderBy(t => t);
 
                     MainSearchBar.SetTypes(allTypes);
-                    }
+                }
 
-                SwitchPeriod("triassic");
+                RestoreSessionState();
             }
             catch (Exception ex)
             {
@@ -82,6 +102,13 @@ namespace EarthEvolutionProject
         /// <param name="periodId">Унікальний ідентифікатор обраного геологічного періоду.</param>
         private void OnTimelinePeriodSelected(object sender, string periodId)
         {
+            if (_profileManager.CurrentProfile != null)
+            {
+                _profileManager.CurrentProfile.LastSelectedPeriodId = periodId;
+                _profileManager.CurrentProfile.LastSelectedOrganismId = null;
+                _profileManager.SaveConfiguration();
+            }
+
             SwitchPeriod(periodId);
         }
 
@@ -92,11 +119,13 @@ namespace EarthEvolutionProject
         /// <param name="periodId">Ідентифікатор періоду, який необхідно активувати.</param>
         private void SwitchPeriod(string periodId)
         {
-            var selectedPeriod = _allPeriods.FirstOrDefault(p => p.Id == periodId);
+            var selectedPeriod = _allPeriods.FirstOrDefault(p => p.Id.Equals(periodId, StringComparison.OrdinalIgnoreCase));
             if (selectedPeriod != null)
             {
                 this.DataContext = selectedPeriod;
-                TimelineControl.UpdateActiveButton(periodId);
+
+                string formattedId = char.ToUpper(periodId[0]) + periodId.Substring(1).ToLower();
+                TimelineControl.UpdateActiveButton(formattedId);
 
                 SpeciesControl.ResetToGallery();
             }
@@ -154,8 +183,14 @@ namespace EarthEvolutionProject
             SearchResultsGrid.Visibility = Visibility.Collapsed;
             TimelinePanel.Visibility = Visibility.Visible;
 
-            SwitchPeriod(selectedOrganism.PeriodId);
+            if (_profileManager.CurrentProfile != null)
+            {
+                _profileManager.CurrentProfile.LastSelectedPeriodId = selectedOrganism.PeriodId;
+                _profileManager.CurrentProfile.LastSelectedOrganismId = selectedOrganism.Id;
+                _profileManager.SaveConfiguration();
+            }
 
+            SwitchPeriod(selectedOrganism.PeriodId);
             SpeciesControl.ShowOrganismDetails(selectedOrganism);
         }
 
@@ -167,13 +202,62 @@ namespace EarthEvolutionProject
         /// <param name="e">Аргументи події натискання.</param>
         private void ThemeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Application.Current is App app)
+            if (Application.Current is App app && _profileManager.CurrentProfile != null)
             {
                 bool isDark = app.ToggleTheme();
+                _profileManager.CurrentProfile.IsDarkTheme = isDark;
+                _profileManager.SaveConfiguration();
 
                 if (ThemeButton.Template.FindName("ThemeIcon", ThemeButton) is TextBlock textBlock)
                 {
                     textBlock.Text = isDark ? "🌙" : "🔆";
+                }
+            }
+        }
+
+        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_profileManager.CurrentProfile != null)
+            {
+                if (SpeciesControl.SpeciesDetailState.Visibility == Visibility.Visible &&
+                    SpeciesControl.DataContext is Organism activeOrganism)
+                {
+                    _profileManager.CurrentProfile.LastSelectedOrganismId = activeOrganism.Id;
+                }
+                else
+                {
+                    _profileManager.CurrentProfile.LastSelectedOrganismId = null;
+                }
+
+                _profileManager.SaveConfiguration();
+            }
+        }
+
+        private void RestoreSessionState()
+        {
+            if (_profileManager.CurrentProfile == null || _allPeriods == null || !_allPeriods.Any()) return;
+
+            var profile = _profileManager.CurrentProfile;
+
+            string savedPeriodId = profile.LastSelectedPeriodId;
+            if (string.IsNullOrEmpty(savedPeriodId))
+            {
+                savedPeriodId = "triassic";
+            }
+
+            SwitchPeriod(savedPeriodId);
+
+            if (!string.IsNullOrEmpty(profile.LastSelectedOrganismId))
+            {
+                var currentPeriod = _allPeriods.FirstOrDefault(p => p.Id.Equals(savedPeriodId, StringComparison.OrdinalIgnoreCase));
+                if (currentPeriod != null)
+                {
+                    var savedOrganism = currentPeriod.Organisms.FirstOrDefault(o => o.Id.Equals(profile.LastSelectedOrganismId, StringComparison.OrdinalIgnoreCase));
+                    if (savedOrganism != null)
+                    {
+                        SpeciesControl.ShowOrganismDetails(savedOrganism);
+                        SpeciesControl.DataContext = savedOrganism;
+                    }
                 }
             }
         }

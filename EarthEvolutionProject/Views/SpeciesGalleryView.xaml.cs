@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EarthEvolutionProject.Models;
 
 namespace EarthEvolutionProject.Views
 {
@@ -20,6 +21,8 @@ namespace EarthEvolutionProject.Views
     /// </summary>
     public partial class SpeciesGalleryView : UserControl
     {
+        public event EventHandler<Organism>? OrganismSelected;
+
         public SpeciesGalleryView()
         {
             InitializeComponent();
@@ -66,6 +69,12 @@ namespace EarthEvolutionProject.Views
 
                 GalleryListState.Visibility = Visibility.Collapsed;
                 SpeciesDetailState.Visibility = Visibility.Visible;
+
+                this.DataContext = element.DataContext;
+                if (element.DataContext is Organism org)
+                {
+                    OrganismSelected?.Invoke(this, org);
+                }
             }
         }
 
@@ -88,7 +97,8 @@ namespace EarthEvolutionProject.Views
                     return value.GetString();
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 System.Diagnostics.Debug.WriteLine($"Помилка доступу до властивості {propertyName}: {ex.Message}");
             }
 
@@ -103,6 +113,8 @@ namespace EarthEvolutionProject.Views
         {
             SpeciesDetailState.Visibility = Visibility.Collapsed;
             GalleryListState.Visibility = Visibility.Visible;
+
+            OrganismSelected?.Invoke(this, null!);
         }
 
         /// <summary>
@@ -163,6 +175,8 @@ namespace EarthEvolutionProject.Views
 
             GalleryListState.Visibility = Visibility.Collapsed;
             SpeciesDetailState.Visibility = Visibility.Visible;
+
+            this.DataContext = organism;
         }
     }
 }
