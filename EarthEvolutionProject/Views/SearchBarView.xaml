@@ -157,19 +157,67 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        
+
         <Grid Width="250" Height="35" Margin="0,0,10,0">
             <Border Background="#1a4a82" CornerRadius="18" BorderBrush="#2a5a92" BorderThickness="1">
-                <Grid Margin="15,0">
+                <Grid Margin="5,0,15,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="🔍" VerticalAlignment="Center" Foreground="#88FFFFFF" FontSize="12" Margin="0,0,8,0"/>
-                    <TextBlock x:Name="PlaceholderText" Text="Пошук істот..." Foreground="#88FFFFFF" VerticalAlignment="Center" Grid.Column="1" IsHitTestVisible="False"/>
-                    <TextBox x:Name="SearchInput" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="White" VerticalContentAlignment="Center" CaretBrush="White" TextChanged="SearchInput_TextChanged"/>
+
+                    <Button x:Name="SearchButton" Grid.Column="0" Content="🔍" 
+                    Background="Transparent" BorderThickness="0" Foreground="#88FFFFFF" FontSize="12" 
+                    Margin="5,0,5,0" Cursor="Hand" Focusable="False"
+                    Click="SearchButton_Click"/>
+
+                    <Grid Grid.Column="1">
+                        <TextBox x:Name="SearchInput" Background="Transparent" BorderThickness="0" Foreground="White" VerticalContentAlignment="Center" CaretBrush="White" 
+                            GotFocus="SearchInput_GotFocus"
+                            LostFocus="SearchInput_LostFocus"
+                            KeyDown="SearchInput_KeyDown"
+                            TextChanged="SearchInput_TextChanged"
+                            PreviewMouseLeftButtonDown="SearchInput_PreviewMouseLeftButtonDown"/>
+
+                        <TextBlock x:Name="PlaceholderText" Text="Пошук істот..." Foreground="#88FFFFFF" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                    </Grid>
                 </Grid>
             </Border>
+
+            <Popup x:Name="HistoryPopup" 
+       PlacementTarget="{Binding ElementName=SearchInput}" 
+       Placement="Bottom" 
+       IsOpen="False" 
+       StaysOpen="True"
+       AllowsTransparency="True">
+                <Border Background="#2a5a92" BorderBrush="#1a4a82" BorderThickness="1" CornerRadius="8" Width="250" Margin="0,5,0,0">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <ListBox x:Name="HistoryListBox" Grid.Row="0"
+                 Background="Transparent" BorderThickness="0"
+                 Foreground="White" MaxHeight="200"
+                 Focusable="False"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 PreviewMouseDown="HistoryListBox_PreviewMouseDown">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Padding="5,2" FontSize="13" Cursor="Hand" Background="Transparent"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <Button Grid.Row="1" Content="Очистити історію" 
+                Background="Transparent" BorderThickness="0" 
+                Foreground="#FF8888" FontSize="11" HorizontalAlignment="Right" Margin="0,5,5,0" Cursor="Hand"
+                Focusable="False"
+                Click="ClearHistory_Click"/>
+                    </Grid>
+                </Border>
+            </Popup>
         </Grid>
 
         <Grid Width="150" Height="35">

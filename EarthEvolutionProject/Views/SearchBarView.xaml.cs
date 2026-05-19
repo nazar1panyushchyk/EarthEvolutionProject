@@ -1,9 +1,10 @@
-﻿using System;
+﻿using EarthEvolutionProject.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using EarthEvolutionProject.Models;
+using System.Windows.Input;
 
 namespace EarthEvolutionProject.Views
 {
@@ -15,8 +16,13 @@ namespace EarthEvolutionProject.Views
     {
         public event EventHandler? FilterChanged;
         public event EventHandler? BackRequested;
+        public event EventHandler? HistoryUpdated;
+
+        private List<string> _searchHistory = new List<string>();
 
         public string SearchText => SearchInput.Text;
+
+        public List<string> SearchHistoryList => _searchHistory;
 
         public List<string> SelectedTypes => TypeFilter.ItemsSource?
              .Cast<FilterItem>()
@@ -29,10 +35,6 @@ namespace EarthEvolutionProject.Views
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Обробляє зміну тексту в полі пошуку. Керує видимістю підказки (placeholder) 
-        /// та ініціює подію оновлення результатів фільтрації.
-        /// </summary>
         private void SearchInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (PlaceholderText != null)
@@ -41,8 +43,143 @@ namespace EarthEvolutionProject.Views
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             }
+        }
+
+        /// <summary>
+        /// Завантажує історію пошуку з профілю користувача в інтерфейс пошукового бару.
+        /// </summary>
+        public void InitSearchHistory(List<string> history)
+        {
+            _searchHistory = history ?? new List<string>();
+            HistoryListBox.ItemsSource = null;
+            HistoryListBox.ItemsSource = _searchHistory;
+        }
+
+        /// <summary>
+        /// Центральний метод запуску пошуку та збереження історії.
+        /// Викликається ТІЛЬКИ коли користувач свідомо підтвердив запит.
+        /// </summary>
+        private void PerformSearch(string query)
+        {
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                AddQueryToHistory(query);
+            }
+
+            HistoryPopup.IsOpen = false;
+
             UpdateBackButtonVisibility();
+
             FilterChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void SearchInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformSearch(SearchInput.Text);
+            }
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            PerformSearch(SearchInput.Text);
+        }
+
+        private void HistoryListBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.OriginalSource is FrameworkElement fe && fe.DataContext is string selectedQuery)
+            {
+                SearchInput.Text = selectedQuery;
+                SearchInput.CaretIndex = SearchInput.Text.Length;
+
+                e.Handled = true;
+
+                PerformSearch(selectedQuery);
+            }
+        }
+
+        private void SearchInput_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (_searchHistory != null && _searchHistory.Any())
+            {
+                HistoryPopup.IsOpen = true;
+            }
+
+            Window parentWindow = Window.GetWindow(this);
+            if (parentWindow != null)
+            {
+                parentWindow.PreviewMouseDown += ParentWindow_PreviewMouseDown;
+            }
+        }
+
+        private void SearchInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (PlaceholderText != null)
+            {
+                PlaceholderText.Visibility = string.IsNullOrEmpty(SearchInput.Text)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+        }
+
+        private void SearchInput_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_searchHistory != null && _searchHistory.Any() && !HistoryPopup.IsOpen)
+            {
+                HistoryPopup.IsOpen = true;
+
+                Window parentWindow = Window.GetWindow(this);
+                if (parentWindow != null)
+                {
+                    parentWindow.PreviewMouseDown -= ParentWindow_PreviewMouseDown;
+                    parentWindow.PreviewMouseDown += ParentWindow_PreviewMouseDown;
+                }
+            }
+        }
+
+        private void HistoryPopup_Closed(object sender, EventArgs e)
+        {
+            HistoryPopup.IsOpen = false;
+        }
+
+        private void AddQueryToHistory(string query)
+        {
+            _searchHistory.Remove(query);
+
+            _searchHistory.Insert(0, query);
+
+            if (_searchHistory.Count > 10)
+            {
+                _searchHistory.RemoveAt(_searchHistory.Count - 1);
+            }
+
+            HistoryListBox.ItemsSource = null;
+            HistoryListBox.ItemsSource = _searchHistory;
+
+            HistoryUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ClearHistory_Click(object sender, RoutedEventArgs e)
+        {
+            _searchHistory.Clear();
+            HistoryListBox.ItemsSource = null;
+            HistoryPopup.IsOpen = false;
+            HistoryUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ParentWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!SearchInput.IsMouseOver && !HistoryPopup.IsMouseOver)
+            {
+                HistoryPopup.IsOpen = false;
+
+                Window parentWindow = Window.GetWindow(this);
+                if (parentWindow != null)
+                {
+                    parentWindow.PreviewMouseDown -= ParentWindow_PreviewMouseDown;
+                }
+            }
         }
 
         /// <summary>

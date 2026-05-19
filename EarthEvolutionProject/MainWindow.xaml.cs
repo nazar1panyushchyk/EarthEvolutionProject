@@ -38,11 +38,20 @@ namespace EarthEvolutionProject
                 MainContentGrid.Visibility = Visibility.Visible;
             };
 
+            MainSearchBar.HistoryUpdated += (s, e) =>
+            {
+                if (_profileManager.CurrentProfile != null)
+                {
+                    _profileManager.CurrentProfile.SearchHistory = new List<string>(MainSearchBar.SearchHistoryList);
+                    _profileManager.SaveConfiguration();
+                }
+            };
+
             SpeciesControl.OrganismSelected += (s, organism) =>
             {
                 if (_profileManager.CurrentProfile != null)
                 {
-                    _profileManager.CurrentProfile.LastSelectedOrganismId = organism.Id;
+                    _profileManager.CurrentProfile.LastSelectedOrganismId = organism?.Id;
                     _profileManager.SaveConfiguration();
                 }
             };
@@ -127,7 +136,7 @@ namespace EarthEvolutionProject
                 string formattedId = char.ToUpper(periodId[0]) + periodId.Substring(1).ToLower();
                 TimelineControl.UpdateActiveButton(formattedId);
 
-                SpeciesControl.ResetToGallery();
+                SpeciesControl.DisplayResults(selectedPeriod.Organisms);
             }
         }
 
@@ -238,6 +247,11 @@ namespace EarthEvolutionProject
             if (_profileManager.CurrentProfile == null || _allPeriods == null || !_allPeriods.Any()) return;
 
             var profile = _profileManager.CurrentProfile;
+
+            if (profile.SearchHistory != null)
+            {
+                MainSearchBar.InitSearchHistory(profile.SearchHistory);
+            }
 
             string savedPeriodId = profile.LastSelectedPeriodId;
             if (string.IsNullOrEmpty(savedPeriodId))
