@@ -1,5 +1,6 @@
 ﻿using EarthEvolutionProject.Models;
 using EarthEvolutionProject.Services;
+using EarthEvolutionProject.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,9 @@ namespace EarthEvolutionProject
     {
         private readonly Services.ProfileManager _profileManager;
         private List<Period> _allPeriods = [];
+        private List<string> _allFacts = [];
+        private bool _isNavigatingBack = false;
+        private bool _isPopupOpenBeforeClick = false;
 
         /// <summary>
         /// Конструктор головного вікна застосунку. Виконує ініціалізацію компонентів інтерфейсу, 
@@ -32,10 +36,32 @@ namespace EarthEvolutionProject
 
             InitializeAppData();
 
+            this.ContentRendered += MainWindow_ContentRendered;
+
             MainSearchBar.BackRequested += (s, e) =>
             {
+                _isNavigatingBack = true;
+
                 SearchResultsGrid.Visibility = Visibility.Collapsed;
                 MainContentGrid.Visibility = Visibility.Visible;
+                TimelinePanel.Visibility = Visibility.Visible;
+
+                if (_profileManager.CurrentProfile != null)
+                {
+                    string savedPeriodId = _profileManager.CurrentProfile.LastSelectedPeriodId;
+                    if (string.IsNullOrEmpty(savedPeriodId))
+                    {
+                        savedPeriodId = "triassic";
+                    }
+
+                    SwitchPeriod(savedPeriodId);
+                }
+                else
+                {
+                    SwitchPeriod("triassic");
+                }
+
+                _isNavigatingBack = false;
             };
 
             MainSearchBar.HistoryUpdated += (s, e) =>
@@ -59,6 +85,13 @@ namespace EarthEvolutionProject
             this.Closing += MainWindow_Closing;
         }
 
+        private void MainWindow_ContentRendered(object? sender, EventArgs e)
+        {
+            this.ContentRendered -= MainWindow_ContentRendered;
+
+            ShowWelcomeFactIfNeeded();
+        }
+
         /// <summary>
         /// Проводить початкове налаштування застосунку: зчитує дані з JSON-файлу, виконує десеріалізацію, 
         /// встановлює зв'язки між об'єктами та ініціалізує список фільтрів у панелі пошуку.
@@ -70,7 +103,10 @@ namespace EarthEvolutionProject
                 string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "evolution_data.json");
                 string jsonString = File.ReadAllText(filePath);
 
-                _allPeriods = JsonSerializer.Deserialize<List<Period>>(jsonString) ?? [];
+                var dataWrapper = JsonSerializer.Deserialize<EvolutionDataWrapper>(jsonString);
+
+                _allPeriods = dataWrapper?.Periods ?? [];
+                _allFacts = dataWrapper?.InterestingFacts ?? [];
 
                 if (_allPeriods != null)
                 {
@@ -97,10 +133,48 @@ namespace EarthEvolutionProject
                 }
 
                 RestoreSessionState();
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Помилка ініціалізації: " + ex.Message);
+            }
+        }
+
+        private void ShowWelcomeFactIfNeeded()
+        {
+            var profile = _profileManager.CurrentProfile;
+
+            if (profile == null || !profile.ShowWelcomeFacts || _allFacts == null || !_allFacts.Any())
+            {
+                return;
+            }
+
+            Random random = new Random();
+            int randomIndex = random.Next(_allFacts.Count);
+            string selectedFact = _allFacts[randomIndex];
+
+            FactWindow factWindow = new FactWindow(selectedFact);
+            factWindow.Owner = this; 
+
+            if (factWindow.ShowDialog() == true)
+            {
+                if (factWindow.DontShowAgain)
+                {
+                    profile.ShowWelcomeFacts = false;
+                    _profileManager.SaveConfiguration();
+                }
+            }
+        }
+
+        private void WelcomeFactsCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            var profile = _profileManager.CurrentProfile;
+            if (profile != null && WelcomeFactsCheckBox != null)
+            {
+                profile.ShowWelcomeFacts = WelcomeFactsCheckBox.IsChecked ?? false;
+
+                _profileManager.SaveConfiguration();
             }
         }
 
@@ -141,13 +215,18 @@ namespace EarthEvolutionProject
         }
 
         /// <summary>
-        /// Реалізує алгоритм фільтрації даних у реальному часі. Аналізує введений текст та обрані категорії, 
+        /// Реалізує алгоритм фільтрації даних у реальному часі. Аналізує введений текст та обрані категорії, 
         /// після чого змінює видимість контейнерів інтерфейсу для відображення результатів пошуку.
         /// </summary>
         /// <param name="sender">Джерело події зміни фільтра.</param>
         /// <param name="e">Аргументи події.</param>
         private void MainSearchBar_FilterChanged(object sender, EventArgs e)
         {
+            if (_isNavigatingBack)
+            {
+                return;
+            }
+
             string query = MainSearchBar.SearchText;
             var selectedTypes = MainSearchBar.SelectedTypes;
 
@@ -155,7 +234,6 @@ namespace EarthEvolutionProject
             {
                 MainContentGrid.Visibility = Visibility.Visible;
                 SearchResultsGrid.Visibility = Visibility.Collapsed;
-
                 TimelinePanel.Visibility = Visibility.Visible;
 
                 if (DataContext is Period p) SpeciesControl.DisplayResults(p.Organisms);
@@ -164,7 +242,6 @@ namespace EarthEvolutionProject
 
             MainContentGrid.Visibility = Visibility.Collapsed;
             SearchResultsGrid.Visibility = Visibility.Visible;
-
             TimelinePanel.Visibility = Visibility.Collapsed;
 
             var foundOrganisms = _allPeriods
@@ -273,6 +350,32 @@ namespace EarthEvolutionProject
                         SpeciesControl.DataContext = savedOrganism;
                     }
                 }
+            }
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPopupOpenBeforeClick)
+            {
+                _isPopupOpenBeforeClick = false;
+                return;
+            }
+
+            var profile = _profileManager.CurrentProfile;
+            if (profile != null)
+            {
+                WelcomeFactsCheckBox.IsChecked = profile.ShowWelcomeFacts;
+            }
+
+            SettingsPopup.IsOpen = true;
+            _isPopupOpenBeforeClick = true;
+        }
+
+        private void SettingsPopup_Closed(object sender, EventArgs e)
+        {
+            if (!SettingsButton.IsMouseOver)
+            {
+                _isPopupOpenBeforeClick = false;
             }
         }
     }

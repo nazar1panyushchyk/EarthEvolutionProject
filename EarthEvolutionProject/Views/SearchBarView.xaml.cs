@@ -43,6 +43,8 @@ namespace EarthEvolutionProject.Views
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             }
+
+            UpdateBackButtonVisibility();
         }
 
         /// <summary>
@@ -257,13 +259,20 @@ namespace EarthEvolutionProject.Views
         }
 
         /// <summary>
-        /// Обробляє натискання кнопки повернення: очищує всі фільтри та ініціює подію 
-        /// виходу з режиму пошуку для повернення до головного контенту.
+        /// Обробляє натискання кнопки повернення: зберігає введений текст для зручності користувача,
+        /// але ховає кнопку "Назад" та ініціює подію виходу з режиму пошуку.
         /// </summary>
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            SearchInput.Text = string.Empty;
-            ResetFilters_Click(null, null);
+            if (HistoryPopup != null)
+            {
+                HistoryPopup.IsOpen = false;
+            }
+
+            if (BackButton != null)
+            {
+                BackButton.Visibility = Visibility.Collapsed;
+            }
 
             BackRequested?.Invoke(this, EventArgs.Empty);
         }
@@ -285,11 +294,14 @@ namespace EarthEvolutionProject.Views
         /// </summary>
         public void ClearAndHide()
         {
-            SearchInput.Text = string.Empty;
+            //SearchInput.Text = string.Empty;
 
             ResetFilters_Click(null, null);
 
-            BackButton.Visibility = Visibility.Collapsed;
+            if (BackButton != null)
+            {
+                BackButton.Visibility = Visibility.Collapsed;
+            }
         }
     }
 } 

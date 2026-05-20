@@ -56,6 +56,77 @@
                     </Button.Template>
                 </Button>
 
+                <Button x:Name="SettingsButton" 
+                        DockPanel.Dock="Right"
+                        Width="35" Height="35" 
+                        Margin="10,0,0,0"
+                        Cursor="Hand"
+                        Click="SettingsButton_Click"
+                        VerticalAlignment="Center">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="SettingsBorder" 
+                                    Background="{DynamicResource SecondaryBackgroundBrush}" 
+                                    CornerRadius="17.5" 
+                                    BorderBrush="{DynamicResource BorderBrush}" 
+                                    BorderThickness="1">
+                                <TextBlock Text="⚙️" 
+                                           Foreground="{DynamicResource PrimaryTextBrush}" 
+                                           FontSize="16" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="SettingsBorder" Property="Background" Value="{DynamicResource AccentBlueBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Popup x:Name="SettingsPopup"
+                       PlacementTarget="{Binding ElementName=SettingsButton}"
+                       Placement="Bottom"
+                       StaysOpen="False"
+                       AllowsTransparency="True"
+                       PopupAnimation="Fade"
+                       Closed="SettingsPopup_Closed">
+
+                    <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
+                            BorderBrush="{DynamicResource BorderBrush}" 
+                            BorderThickness="1.5" 
+                            CornerRadius="10" 
+                            Padding="15" 
+                            Width="280"
+                            Margin="0,5,0,0">
+
+                        <StackPanel>
+                            <TextBlock Text="Налаштування" 
+                                       Foreground="{DynamicResource PrimaryTextBrush}" 
+                                       FontWeight="Bold" 
+                                       FontSize="14" 
+                                       Margin="0,0,0,10"/>
+
+                            <Separator Background="{DynamicResource BorderBrush}" Margin="0,0,0,10"/>
+
+                            <CheckBox x:Name="WelcomeFactsCheckBox" 
+                                      Content="Показувати цікаві факти при запуску" 
+                                      Foreground="{DynamicResource PrimaryTextBrush}" 
+                                      FontSize="12"
+                                      Cursor="Hand"
+                                      Checked="WelcomeFactsCheckBox_Changed"
+                                      Unchecked="WelcomeFactsCheckBox_Changed">
+                                <CheckBox.Resources>
+                                    <Style TargetType="BulletDecorator">
+                                        <Setter Property="Margin" Value="0,0,6,0"/>
+                                    </Style>
+                                </CheckBox.Resources>
+                            </CheckBox>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+
                 <views:SearchBarView x:Name="MainSearchBar" 
                      DockPanel.Dock="Right"
                      VerticalAlignment="Center"

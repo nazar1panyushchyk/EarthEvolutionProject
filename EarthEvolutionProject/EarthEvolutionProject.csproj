@@ -42,6 +42,7 @@
     <None Remove="MainWindow.xaml" />
     <None Remove="Themes\DarkTheme.xaml" />
     <None Remove="Themes\LightTheme.xaml" />
+    <None Remove="Views\FactWindow.xaml" />
     <None Remove="Views\LoginWindow.xaml" />
     <None Remove="Views\PeriodDetailsView.xaml" />
     <None Remove="Views\PeriodsTimelineView.xaml" />
@@ -80,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FactWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginWindow.xaml">
