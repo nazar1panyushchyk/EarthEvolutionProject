@@ -100,5 +100,48 @@ namespace EarthEvolutionProject.Services
             _config.LastActiveUsername = username;
             SaveConfiguration();
         }
+
+        public bool DeleteProfile(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username)) return false;
+
+            username = username.Trim();
+
+            var profileToDelete = _config.Profiles.FirstOrDefault(p => p.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            if (profileToDelete != null)
+            {
+                _config.Profiles.Remove(profileToDelete);
+
+                if (CurrentProfile != null && CurrentProfile.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
+                {
+                    CurrentProfile = null;
+                }
+
+                if (_config.LastActiveUsername != null && _config.LastActiveUsername.Equals(username, StringComparison.OrdinalIgnoreCase))
+                {
+                    _config.LastActiveUsername = _config.Profiles.FirstOrDefault()?.Username;
+                }
+
+                SaveConfigDirectly();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void SaveConfigDirectly()
+        {
+            try
+            {
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(_config, options);
+                File.WriteAllText(ConfigPath, json);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Помилка збереження конфігурації при видаленні: {ex.Message}");
+            }
+        }
     }
 }

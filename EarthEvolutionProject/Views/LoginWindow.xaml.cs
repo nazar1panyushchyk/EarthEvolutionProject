@@ -73,5 +73,39 @@ namespace EarthEvolutionProject.Views
 
             this.Close();
         }
+
+        private void DeleteProfileItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button deleteButton && deleteButton.CommandParameter is string username)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    $"Ви дійсно хочете видалити профіль \"{username}\" та всю його історію?",
+                    "Підтвердження видалення",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning
+                );
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    bool isDeleted = _profileManager.DeleteProfile(username);
+
+                    if (isDeleted)
+                    {
+                        if (NewUserTextBox.Text.Trim().Equals(username, StringComparison.OrdinalIgnoreCase))
+                        {
+                            NewUserTextBox.Text = string.Empty;
+                        }
+
+                        LoadUsers();
+
+                        MessageBox.Show($"Профіль \"{username}\" успішно видалено.", "Успіх", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не вдалося видалити цей профіль.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
     }
 }

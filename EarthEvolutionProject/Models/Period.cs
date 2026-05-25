@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace EarthEvolutionProject.Models
 {
@@ -14,6 +15,6 @@ namespace EarthEvolutionProject.Models
         public required string Timeframe { get; set; }
         public required string MainImage { get; set; }
         public required string Description { get; set; }
-        public List<Organism> Organisms { get; set; } = [];
+        public ObservableCollection<Organism> Organisms { get; set; } = [];
     }
 }

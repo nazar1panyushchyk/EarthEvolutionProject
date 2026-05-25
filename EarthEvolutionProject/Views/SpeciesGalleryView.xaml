@@ -8,27 +8,37 @@
              mc:Ignorable="d">
     <Border Background="{DynamicResource SecondaryBackgroundBrush}" CornerRadius="15" Padding="12">
         <Grid>
+
             <Grid x:Name="GalleryListState" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="ГАЛЕРЕЯ ВИДІВ" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18" FontWeight="Light" Margin="5,0,0,10"/>
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="ГАЛЕРЕЯ ВИДІВ" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18" FontWeight="Light" VerticalAlignment="Center"/>
+                    <Button Content="➕ Додати організм" 
+                        HorizontalAlignment="Right" 
+                        Padding="10,5"
+                        Click="AddOrganismButton_Click" 
+                        Style="{DynamicResource PrimaryButtonStyle}"/>      
+                </Grid>
 
-                <ItemsControl x:Name="SpeciesItemsControl" Grid.Row="1">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="3"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl Grid.Row="1" x:Name="SpeciesItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls:OrganismCardView Cursor="Hand" PreviewMouseDown="OrganismCard_MouseDown"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <controls:OrganismCardView Cursor="Hand" PreviewMouseDown="OrganismCard_MouseDown"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
             </Grid>
 
             <Grid x:Name="SpeciesDetailState" Visibility="Collapsed">
@@ -38,9 +48,16 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Button Content="← Назад до галереї" Click="BackToList_Click"
-                        Background="Transparent" Foreground="{DynamicResource AccentBlueBrush}" BorderThickness="0" 
-                        HorizontalAlignment="Left" FontSize="12" Margin="0,0,0,10" Cursor="Hand"/>
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <Button Content="← Назад до галереї" Click="BackToList_Click"
+                            Background="Transparent" Foreground="{DynamicResource AccentBlueBrush}" BorderThickness="0" 
+                            HorizontalAlignment="Left" FontSize="12" Cursor="Hand"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="✏️ Редагувати" Click="EditOrganismButton_Click" Margin="0,0,10,0" Padding="8,3" Style="{DynamicResource PrimaryButtonStyle}"/>
+                        <Button Content="🗑️ Видалити" Click="DeleteOrganismButton_Click" Background="#FF4B4B" Foreground="White" Padding="8,3"/>
+                    </StackPanel>
+                </Grid>
 
                 <Border Grid.Row="1" 
                         Background="{DynamicResource PrimaryBackgroundBrush}" 
@@ -51,7 +68,6 @@
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.3" ShadowDepth="2"/>
                     </Border.Effect>
-
                     <Image x:Name="DetailImage" 
                            Stretch="Uniform" 
                            VerticalAlignment="Center"
@@ -86,6 +102,52 @@
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
+
+            <Grid x:Name="CrudFormGrid" Visibility="Collapsed" Background="{DynamicResource SecondaryBackgroundBrush}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="15">
+                        <TextBlock x:Name="FormTitleTextBlock" Text="Додавання нового організму" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,15"/>
+
+                        <TextBlock Text="Назва (українською):" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,5,0,2"/>
+                        <TextBox x:Name="CommonNameTextBox" Height="30" VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="Наукова назва (латинь):" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
+                        <TextBox x:Name="ScientificNameTextBox" Height="30" VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="Тип організму:" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
+                        <ComboBox x:Name="TypeComboBox" Height="30" VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="Геологічний період:" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
+                        <ComboBox x:Name="PeriodComboBox" Height="30" VerticalContentAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+
+                        <TextBlock Text="Час існування (напр., 240-230 млн років тому):" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
+                        <TextBox x:Name="ExistenceTextBox" Height="30" VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="Спосіб життя та опис:" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
+                        <TextBox x:Name="LifestyleTextBox" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+
+                        <TextBlock Text="Зображення організму:" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="ImagePathTextBox" IsReadOnly="True" Height="30" VerticalContentAlignment="Center" Margin="0,0,10,0"/>
+                            <Button Grid.Column="1" Content="📁 Огляд..." Width="90" Click="BrowseImageButton_Click" Style="{DynamicResource PrimaryButtonStyle}"/>
+                        </Grid>
+
+                        <Grid Margin="0,20,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Скасувати" Height="35" Margin="0,0,10,0" Click="CancelFormButton_Click" Style="{DynamicResource PrimaryButtonStyle}"/>
+                            <Button Grid.Column="1" Content="Зберегти" Height="35" Background="{DynamicResource PrimaryBlueBrush}" Foreground="White" FontWeight="Bold" Click="SaveFormButton_Click" Style="{DynamicResource PrimaryButtonStyle}"/>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
         </Grid>
     </Border>
 </UserControl>

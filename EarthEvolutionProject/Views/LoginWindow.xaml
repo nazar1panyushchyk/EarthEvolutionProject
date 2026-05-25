@@ -28,18 +28,50 @@
                          Background="Transparent" 
                          BorderThickness="0"
                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         HorizontalContentAlignment="Stretch"
                          SelectionChanged="UsersListBox_SelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border Padding="10,8" Margin="2" CornerRadius="5" Background="{DynamicResource HoverBackgroundBrush}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
-                                          Fill="{DynamicResource AccentBlueBrush}" 
-                                          Width="20" Height="20" Stretch="Fill" Margin="0,0,15,0"/>
-                                    <TextBlock Text="{Binding}" 
-                                               Foreground="{DynamicResource PrimaryTextBrush}" 
-                                               FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                </StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
+                                              Fill="{DynamicResource AccentBlueBrush}" 
+                                              Width="20" Height="20" Stretch="Fill" Margin="0,0,15,0"/>
+                                        <TextBlock Text="{Binding}" 
+                                                   Foreground="{DynamicResource PrimaryTextBrush}" 
+                                                   FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1"
+                                        Width="28" Height="28"
+                                        ToolTip="Видалити цей профіль"
+                                        Cursor="Hand"
+                                        Click="DeleteProfileItemButton_Click"
+                                        CommandParameter="{Binding}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="BtnBorder" Background="Transparent" CornerRadius="4">
+                                                    <TextBlock Text="🗑️" 
+                                                        FontSize="14"
+                                                        HorizontalAlignment="Center" 
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="BtnBorder" Property="Background" Value="#44FF0000"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

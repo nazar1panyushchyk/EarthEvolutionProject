@@ -9,14 +9,15 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Newtonsoft.Json;
 
 namespace EarthEvolutionProject
 {
     public partial class MainWindow : Window
     {
         private readonly Services.ProfileManager _profileManager;
-        private List<Period> _allPeriods = [];
-        private List<string> _allFacts = [];
+        public List<Period> _allPeriods = [];
+        public List<string> _allFacts = [];
         private bool _isNavigatingBack = false;
         private bool _isPopupOpenBeforeClick = false;
 
@@ -89,6 +90,18 @@ namespace EarthEvolutionProject
         {
             this.ContentRendered -= MainWindow_ContentRendered;
 
+            if (_allPeriods != null && _allPeriods.Any())
+            {
+                var allTypes = _allPeriods
+                    .SelectMany(p => p.Organisms)
+                    .Select(o => o.Type)
+                    .Where(t => !string.IsNullOrEmpty(t))
+                    .Distinct()
+                    .OrderBy(t => t);
+
+                SpeciesControl.PopulateComboBoxes(allTypes, _allPeriods);
+            }
+
             ShowWelcomeFactIfNeeded();
         }
 
@@ -103,7 +116,7 @@ namespace EarthEvolutionProject
                 string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "evolution_data.json");
                 string jsonString = File.ReadAllText(filePath);
 
-                var dataWrapper = JsonSerializer.Deserialize<EvolutionDataWrapper>(jsonString);
+                var dataWrapper = System.Text.Json.JsonSerializer.Deserialize<EvolutionDataWrapper>(jsonString);
 
                 _allPeriods = dataWrapper?.Periods ?? [];
                 _allFacts = dataWrapper?.InterestingFacts ?? [];
@@ -138,6 +151,34 @@ namespace EarthEvolutionProject
             catch (Exception ex)
             {
                 MessageBox.Show("Помилка ініціалізації: " + ex.Message);
+            }
+        }
+
+        public void SaveDataToJson()
+        {
+            try
+            {
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "evolution_data.json");
+
+                var dataWrapper = new EvolutionDataWrapper
+                {
+                    InterestingFacts = _allFacts,
+                    Periods = _allPeriods
+                };
+
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(dataWrapper, Newtonsoft.Json.Formatting.Indented);
+
+                string? directory = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                File.WriteAllText(filePath, jsonString, System.Text.Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Помилка збереження даних: " + ex.Message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -200,7 +241,7 @@ namespace EarthEvolutionProject
         /// на шкалі часу та скидає стан відображення галереї видів.
         /// </summary>
         /// <param name="periodId">Ідентифікатор періоду, який необхідно активувати.</param>
-        private void SwitchPeriod(string periodId)
+        public void SwitchPeriod(string periodId)
         {
             var selectedPeriod = _allPeriods.FirstOrDefault(p => p.Id.Equals(periodId, StringComparison.OrdinalIgnoreCase));
             if (selectedPeriod != null)
@@ -210,6 +251,7 @@ namespace EarthEvolutionProject
                 string formattedId = char.ToUpper(periodId[0]) + periodId.Substring(1).ToLower();
                 TimelineControl.UpdateActiveButton(formattedId);
 
+                SpeciesControl.DisplayResults(null!);
                 SpeciesControl.DisplayResults(selectedPeriod.Organisms);
             }
         }
