@@ -26,6 +26,16 @@ namespace EarthEvolutionProject.Views
         /// </summary>
         public event EventHandler<string>? PeriodSelected;
 
+        private List<PeriodViewModel> _periods; 
+        public class PeriodViewModel
+        {
+            public string Title { get; set; } = string.Empty;
+            public string Years { get; set; } = string.Empty;
+            public Brush BackgroundColor { get; set; } = Brushes.Transparent;
+            public string Tag { get; set; } = string.Empty;
+            public bool IsActive { get; set; } 
+        }
+
         /// <summary>
         /// Конструктор елемента керування шкалою часу. Виконує ініціалізацію візуальних компонентів, 
         /// визначених у XAML-розмітці.
@@ -33,6 +43,20 @@ namespace EarthEvolutionProject.Views
         public PeriodsTimelineView()
         {
             InitializeComponent();
+
+            var bc = new BrushConverter();
+
+            _periods = new List<PeriodViewModel>
+            {
+             new PeriodViewModel { Title = "ТРІАСОВИЙ", Years = "252 – 201.3 млн", BackgroundColor = (bc.ConvertFrom("#4B4054") as Brush) ?? Brushes.Transparent, Tag = "Triassic" },
+             new PeriodViewModel { Title = "ЮРСЬКИЙ", Years = "201.3 – 145 млн", BackgroundColor = (bc.ConvertFrom("#2B7793") as Brush) ?? Brushes.Transparent, Tag = "Jurassic" },
+             new PeriodViewModel { Title = "КРЕЙДОВИЙ", Years = "145 – 66 млн", BackgroundColor = (bc.ConvertFrom("#6D8444") as Brush) ?? Brushes.Transparent, Tag = "Cretaceous" },
+             new PeriodViewModel { Title = "ПАЛЕОГЕН", Years = "66 – 23 млн", BackgroundColor = (bc.ConvertFrom("#915832") as Brush) ?? Brushes.Transparent, Tag = "Paleogene" },
+             new PeriodViewModel { Title = "НЕОГЕН", Years = "23 – 2.5 млн", BackgroundColor = (bc.ConvertFrom("#A58934") as Brush) ?? Brushes.Transparent, Tag = "Neogene" },
+             new PeriodViewModel { Title = "АНТРОПОГЕН", Years = "2.5 млн – н.ч.", BackgroundColor = (bc.ConvertFrom("#73808C") as Brush) ?? Brushes.Transparent, Tag = "Anthropogene" }
+            };
+
+            TimelineItemsControl.ItemsSource = _periods;
         }
 
         /// <summary>
@@ -43,28 +67,24 @@ namespace EarthEvolutionProject.Views
         /// <param name="e">Аргументи події маршрутизації.</param>
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
-            if (sender is TimelineButton btn && btn.Tag is string periodId)
+            if (sender is TimelineButton clickedButton && clickedButton.DataContext is PeriodViewModel periodData)
             {
-                PeriodSelected?.Invoke(this, periodId);
+                string tag = periodData.Tag;
+
+                UpdateActiveButton(tag);
+
+                PeriodSelected?.Invoke(this, tag);
             }
         }
 
-        /// <summary>
-        /// Оновлює візуальний стан кнопок на шкалі часу, встановлюючи активний стан для вибраного періоду 
-        /// та скидаючи його для всіх інших кнопок.
-        /// </summary>
-        /// <param name="activeId">Ідентифікатор періоду, який має стати активним (виділеним).</param>
         public void UpdateActiveButton(string activeId)
         {
-            string[] ids = { "Triassic", "Jurassic", "Cretaceous", "Paleogene", "Neogene", "Anthropogene" };
-
-            foreach (var id in ids)
+            foreach (var period in _periods)
             {
-                if (this.FindName($"Btn{id}") is TimelineButton btn)
-                {
-                    btn.SetActive(id.Equals(activeId, StringComparison.OrdinalIgnoreCase));
-                }
+                period.IsActive = period.Tag.Equals(activeId, StringComparison.OrdinalIgnoreCase);
             }
+
+            TimelineItemsControl.Items.Refresh();
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static EarthEvolutionProject.Views.PeriodsTimelineView;
 
 namespace EarthEvolutionProject.Controls
 {
@@ -27,6 +28,8 @@ namespace EarthEvolutionProject.Controls
         public TimelineButton()
         {
             InitializeComponent();
+
+            this.DataContextChanged += TimelineButton_DataContextChanged;
         }
 
         /// <summary>
@@ -44,6 +47,14 @@ namespace EarthEvolutionProject.Controls
         /// </summary>
         public Brush ButtonBackground { get => ActionButton.Background; set => ActionButton.Background = value; }
 
+        private void TimelineButton_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (DataContext is PeriodViewModel periodData)
+            {
+                SetActive(periodData.IsActive);
+            }
+        }
+
         /// <summary>
         /// Змінює візуальний стан кнопки (активний/неактивний).
         /// Оновлює видимість декоративних елементів, шрифти та колір межі.
@@ -51,6 +62,8 @@ namespace EarthEvolutionProject.Controls
         /// <param name="isActive">True, якщо період обраний; False для звичайного стану.</param>
         public void SetActive(bool isActive)
         {
+            if (ActiveArrow == null || ActiveFrame == null || ActionButton == null || TitleText == null) return;
+            
             ActiveArrow.Visibility = isActive ? Visibility.Visible : Visibility.Collapsed;
             ActiveFrame.Visibility = isActive ? Visibility.Visible : Visibility.Collapsed;
 

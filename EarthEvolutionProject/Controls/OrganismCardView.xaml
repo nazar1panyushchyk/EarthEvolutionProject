@@ -12,10 +12,11 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" 
+            <Image x:Name="CardImage"
+                   Grid.Row="0" 
                    Source="{Binding Image}" 
                    Stretch="Uniform" 
-                   MaxHeight="120" 
+                   MaxHeight="100" 
                    VerticalAlignment="Center" 
                    HorizontalAlignment="Center"/>
 

@@ -24,8 +24,9 @@
                         Style="{DynamicResource PrimaryButtonStyle}"/>      
                 </Grid>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl Grid.Row="1" x:Name="SpeciesItemsControl">
+                <ScrollViewer Grid.Row="1" x:Name="GalleryScrollViewer" 
+                    VerticalScrollBarVisibility="Visible" Padding="0,0,5,0">
+                    <ItemsControl Grid.Row="1" x:Name="SpeciesItemsControl" VerticalAlignment="Top">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="3"/>
@@ -120,8 +121,171 @@
                         <TextBlock Text="Геологічний період:" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
                         <ComboBox x:Name="PeriodComboBox" Height="30" VerticalContentAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Id"/>
 
-                        <TextBlock Text="Час існування (напр., 240-230 млн років тому):" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
-                        <TextBox x:Name="ExistenceTextBox" Height="30" VerticalContentAlignment="Center"/>
+                        <StackPanel Margin="0,10,0,10">
+                            <DockPanel LastChildFill="False" Margin="0,0,0,5">
+                                <TextBlock Text="Час існування (років тому):" 
+                                    Foreground="{DynamicResource PrimaryTextBrush}" 
+                                    FontWeight="SemiBold" FontSize="13" DockPanel.Dock="Left"/>
+
+                                <CheckBox x:Name="IsRangeCheckBox" 
+                                    Content="Діапазон (проміжок часу)" 
+                                    Foreground="{DynamicResource SecondaryTextBrush}" 
+                                    FontSize="12" 
+                                    DockPanel.Dock="Right" 
+                                    VerticalAlignment="Center"
+                                    Cursor="Hand"
+                                    Checked="IsRangeCheckBox_Changed" 
+                                    Unchecked="IsRangeCheckBox_Changed"/>
+                            </DockPanel>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition x:Name="SeparatorColumn" Width="Auto"/>
+                                    <ColumnDefinition x:Name="ToValueColumn" Width="0"/>
+                                    <ColumnDefinition x:Name="ToUnitColumn" Width="0"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="FromValueTextBox" 
+                                     Grid.Column="0" Height="32" 
+                                     VerticalContentAlignment="Center" Padding="8,0"
+                                     Background="{DynamicResource SecondaryBackgroundBrush}" 
+                                     Foreground="{DynamicResource PrimaryTextBrush}"   
+                                     BorderBrush="{DynamicResource BorderBrush}"
+                                     PreviewTextInput="NumberValidationTextBox"/>
+
+                                <ComboBox x:Name="FromUnitComboBox" 
+                                        Grid.Column="1" Width="80" Height="32" Margin="5,0,0,0"
+                                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                        Background="{DynamicResource SecondaryBackgroundBrush}" 
+                                        Foreground="{DynamicResource PrimaryTextBrush}"
+                                        SelectedIndex="0">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ComboBox">
+                                                        <Grid>
+                                                            <Border x:Name="ToggleButtonBackground" 
+                                                                Background="{TemplateBinding Background}" 
+                                                                BorderBrush="{DynamicResource BorderBrush}" 
+                                                                BorderThickness="1" 
+                                                                CornerRadius="4"/>
+
+                                                            <ToggleButton x:Name="PART_ToggleButton" 
+                                                                Background="Transparent" 
+                                                                BorderThickness="0"
+                                                                HorizontalContentAlignment="Stretch" 
+                                                                VerticalContentAlignment="Stretch"
+                                                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                Focusable="False"/>
+
+                                                            <ContentPresenter x:Name="ContentSite" 
+                                                                IsHitTestVisible="False" 
+                                                                Content="{TemplateBinding SelectionBoxItem}" 
+                                                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                                Margin="10,0,22,0"/>
+
+                                                            <Path x:Name="Arrow" 
+                                                                IsHitTestVisible="False"
+                                                                Fill="{TemplateBinding Foreground}" 
+                                                                Data="M 0 0 L 3.5 4 L 7 0 Z" 
+                                                                HorizontalAlignment="Right" 
+                                                                VerticalAlignment="Center" 
+                                                                Margin="0,0,8,0"/>
+
+                                                            <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                                                <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                                                    <Border x:Name="DropDownBorder" Background="{DynamicResource SecondaryBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="4"/>
+                                                                    <ScrollViewer Margin="4" SnapsToDevicePixels="True">
+                                                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                                                    </ScrollViewer>
+                                                                </Grid>
+                                                            </Popup>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+                                            <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                    <ComboBoxItem Content="млн"/>
+                                    <ComboBoxItem Content="тис"/>
+                                    <ComboBoxItem Content="р."/>
+                                </ComboBox>
+
+                                <TextBlock x:Name="RangeSeparatorText" 
+                                    Grid.Column="2" Text=" — " 
+                                    Foreground="{DynamicResource PrimaryTextBrush}" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                    Margin="5,0,5,0" Visibility="Collapsed"/>
+
+                                <TextBox x:Name="ToValueTextBox" 
+                                     Grid.Column="3" Height="32" Margin="5,0,0,0"
+                                     VerticalContentAlignment="Center" Padding="8,0"
+                                     Background="{DynamicResource SecondaryBackgroundBrush}" 
+                                     Foreground="{DynamicResource PrimaryTextBrush}" 
+                                     BorderBrush="{DynamicResource BorderBrush}"
+                                     Visibility="Collapsed"
+                                     PreviewTextInput="NumberValidationTextBox"/>
+
+                                <ComboBox x:Name="ToUnitComboBox" 
+                                        Grid.Column="4" Width="80" Height="32" Margin="5,0,0,0"
+                                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                        Background="{DynamicResource SecondaryBackgroundBrush}" 
+                                        Foreground="{DynamicResource PrimaryTextBrush}"
+                                        SelectedIndex="0"
+                                        Visibility="Collapsed">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ComboBox">
+                                                        <Grid>
+                                                            <Border x:Name="ToggleButtonBackground" Background="{TemplateBinding Background}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4"/>
+                                                            <ToggleButton x:Name="PART_ToggleButton" 
+                                                                Background="Transparent" 
+                                                                BorderThickness="0"
+                                                                HorizontalContentAlignment="Stretch" 
+                                                                VerticalContentAlignment="Stretch"
+                                                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                Focusable="False"/>
+                                                            <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="10,0,22,0"/>
+                                                            <Path x:Name="Arrow" Fill="{TemplateBinding Foreground}" Data="M 0 0 L 3.5 4 L 7 0 Z" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                            <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                                                <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                                                    <Border x:Name="DropDownBorder" Background="{DynamicResource SecondaryBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="4"/>
+                                                                    <ScrollViewer Margin="4" SnapsToDevicePixels="True">
+                                                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                                                    </ScrollViewer>
+                                                                </Grid>
+                                                            </Popup>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+                                            <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                    <ComboBoxItem Content="млн"/>
+                                    <ComboBoxItem Content="тис"/>
+                                    <ComboBoxItem Content="р."/>
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
 
                         <TextBlock Text="Спосіб життя та опис:" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,10,0,2"/>
                         <TextBox x:Name="LifestyleTextBox" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>

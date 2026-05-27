@@ -124,8 +124,6 @@
         </Style>
     </UserControl.Resources>
     
-    
-
     <StackPanel Orientation="Horizontal">
         <Button x:Name="BackButton" 
             Width="35" Height="35" 
@@ -166,10 +164,40 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="SearchButton" Grid.Column="0" Content="🔍" 
-                    Background="Transparent" BorderThickness="0" Foreground="#88FFFFFF" FontSize="12" 
-                    Margin="5,0,5,0" Cursor="Hand" Focusable="False"
-                    Click="SearchButton_Click"/>
+                    <Button x:Name="SearchButton" Grid.Column="0"
+                            Background="Transparent" BorderThickness="0" 
+                            FontSize="12" Margin="5,0,5,0" 
+                            Cursor="Hand" Focusable="False"
+                            Click="SearchButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="BtnBorder" 
+                                    Background="Transparent" 
+                                    CornerRadius="12" 
+                                    Width="24" Height="24"
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock Text="🔍" 
+                                        x:Name="IconText"
+                                        Foreground="#88FFFFFF" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,0,1"/>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="BtnBorder" Property="Background" Value="#22FFFFFF"/>
+                                        <Setter TargetName="IconText" Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="BtnBorder" Property="Background" Value="#44FFFFFF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
 
                     <Grid Grid.Column="1">
                         <TextBox x:Name="SearchInput" Background="Transparent" BorderThickness="0" Foreground="White" VerticalContentAlignment="Center" CaretBrush="White" 
@@ -185,11 +213,11 @@
             </Border>
 
             <Popup x:Name="HistoryPopup" 
-       PlacementTarget="{Binding ElementName=SearchInput}" 
-       Placement="Bottom" 
-       IsOpen="False" 
-       StaysOpen="True"
-       AllowsTransparency="True">
+                    PlacementTarget="{Binding ElementName=SearchInput}" 
+                    Placement="Bottom" 
+                    IsOpen="False" 
+                    StaysOpen="True"
+                    AllowsTransparency="True">
                 <Border Background="#2a5a92" BorderBrush="#1a4a82" BorderThickness="1" CornerRadius="8" Width="250" Margin="0,5,0,0">
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
@@ -198,11 +226,11 @@
                         </Grid.RowDefinitions>
 
                         <ListBox x:Name="HistoryListBox" Grid.Row="0"
-                 Background="Transparent" BorderThickness="0"
-                 Foreground="White" MaxHeight="200"
-                 Focusable="False"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 PreviewMouseDown="HistoryListBox_PreviewMouseDown">
+                                Background="Transparent" BorderThickness="0"
+                                Foreground="White" MaxHeight="200"
+                                Focusable="False"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                PreviewMouseDown="HistoryListBox_PreviewMouseDown">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding}" Padding="5,2" FontSize="13" Cursor="Hand" Background="Transparent"/>
@@ -211,10 +239,10 @@
                         </ListBox>
 
                         <Button Grid.Row="1" Content="Очистити історію" 
-                Background="Transparent" BorderThickness="0" 
-                Foreground="#FF8888" FontSize="11" HorizontalAlignment="Right" Margin="0,5,5,0" Cursor="Hand"
-                Focusable="False"
-                Click="ClearHistory_Click"/>
+                             Background="Transparent" BorderThickness="0" 
+                             Foreground="#FF8888" FontSize="11" HorizontalAlignment="Right" Margin="0,5,5,0" Cursor="Hand"
+                             Focusable="False"
+                             Click="ClearHistory_Click"/>
                     </Grid>
                 </Border>
             </Popup>
@@ -241,4 +269,4 @@
             </ComboBox>
         </Grid>
     </StackPanel>
-</UserControl>
+</UserControl> 

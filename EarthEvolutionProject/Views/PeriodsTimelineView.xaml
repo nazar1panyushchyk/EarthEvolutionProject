@@ -8,54 +8,18 @@
              d:DesignHeight="60" d:DesignWidth="1100"
              Height="55">
     <Grid>
-        <UniformGrid Columns="6">
-            <controls:TimelineButton x:Name="BtnTriassic"
-                                     Margin="0,0"
-                                     Title="ТРІАСОВИЙ"
-                                     Years="252 – 201.3 млн"
-                                     ButtonBackground="#4B4054"
-                                     Tag="triassic"
-                                     Click="OnButtonClick"/>
+        <ItemsControl x:Name="TimelineItemsControl">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="6"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
 
-            <controls:TimelineButton x:Name="BtnJurassic"
-                                     Margin="0,0"
-                                     Title="ЮРСЬКИЙ"
-                                     Years="201.3 – 145 млн"
-                                     ButtonBackground="#2B7793"
-                                     Tag="jurassic"
-                                     Click="OnButtonClick"/>
-
-            <controls:TimelineButton x:Name="BtnCretaceous"
-                                     Margin="0,0"
-                                     Title="КРЕЙДОВИЙ"
-                                     Years="145 – 66 млн"
-                                     ButtonBackground="#6D8444"
-                                     Tag="cretaceous"
-                                     Click="OnButtonClick"/>
-
-            <controls:TimelineButton x:Name="BtnPaleogene"
-                                     Margin="0,0"
-                                     Title="ПАЛЕОГЕН"
-                                     Years="66 – 23 млн"
-                                     ButtonBackground="#915832"
-                                     Tag="paleogene"
-                                     Click="OnButtonClick"/>
-
-            <controls:TimelineButton x:Name="BtnNeogene"
-                                     Margin="0,0"
-                                     Title="НЕОГЕН"
-                                     Years="23 – 2.5 млн"
-                                     ButtonBackground="#A58934"
-                                     Tag="neogene"
-                                     Click="OnButtonClick"/>
-
-            <controls:TimelineButton x:Name="BtnAnthropogene"
-                                     Margin="0,0"
-                                     Title="АНТРОПОГЕН"
-                                     Years="2.5 млн – н.ч."
-                                     ButtonBackground="#73808C"
-                                     Tag="anthropogene"
-                                     Click="OnButtonClick"/>
-        </UniformGrid>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls:TimelineButton Click="OnButtonClick" Margin="0,0"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

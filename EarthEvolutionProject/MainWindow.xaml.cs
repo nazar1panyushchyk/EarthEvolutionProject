@@ -233,6 +233,8 @@ namespace EarthEvolutionProject
                 _profileManager.SaveConfiguration();
             }
 
+            TimelineControl.UpdateActiveButton(periodId);
+
             SwitchPeriod(periodId);
         }
 

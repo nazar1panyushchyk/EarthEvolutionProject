@@ -132,6 +132,7 @@ namespace EarthEvolutionProject.Views
             if (this.DataContext is EarthEvolutionProject.Models.Period period)
             {
                 SpeciesItemsControl.ItemsSource = period.Organisms;
+                UpdateScrollViewer();
             }
 
             SpeciesDetailState.Visibility = Visibility.Collapsed;
@@ -156,6 +157,8 @@ namespace EarthEvolutionProject.Views
 
             SpeciesDetailState.Visibility = Visibility.Collapsed;
             GalleryListState.Visibility = Visibility.Visible;
+
+            UpdateScrollViewer();
         }
 
         /// <summary>
@@ -233,9 +236,48 @@ namespace EarthEvolutionProject.Views
                 ScientificNameTextBox.Text = organism.ScientificName;
                 TypeComboBox.SelectedItem = organism.Type;
                 PeriodComboBox.SelectedValue = organism.PeriodId;
-                ExistenceTextBox.Text = organism.Existence;
                 LifestyleTextBox.Text = organism.Lifestyle;
                 ImagePathTextBox.Text = organism.Image;
+
+                try
+                {
+                    string savedExistence = organism.Existence ?? "";
+                    string clean = savedExistence.Replace(" років тому", "").Trim();
+
+                    if (clean.Contains("-"))
+                    {
+                        IsRangeCheckBox.IsChecked = true;
+                        IsRangeCheckBox_Changed(null!, null!);
+
+                        string[] parts = clean.Split('-');
+                        string left = parts[0].Trim(); 
+                        string right = parts[1].Trim(); 
+
+                        string[] leftWords = left.Split(' ');
+                        FromValueTextBox.Text = leftWords[0];
+                        SetComboBoxValue(FromUnitComboBox, leftWords.Length > 1 ? leftWords[1] : "млн");
+
+                        string[] rightWords = right.Split(' ');
+                        ToValueTextBox.Text = rightWords[0];
+                        SetComboBoxValue(ToUnitComboBox, rightWords.Length > 1 ? rightWords[1] : "млн");
+                    }
+                    else
+                    {
+                        IsRangeCheckBox.IsChecked = false;
+                        IsRangeCheckBox_Changed(null!, null!);
+
+                        string[] words = clean.Split(' ');
+                        FromValueTextBox.Text = words[0];
+                        SetComboBoxValue(FromUnitComboBox, words.Length > 1 ? words[1] : "млн");
+                    }
+                }
+                catch
+                {
+                    IsRangeCheckBox.IsChecked = false;
+                    IsRangeCheckBox_Changed(null!, null!);
+                    FromValueTextBox.Text = organism.Existence;
+                    FromUnitComboBox.SelectedIndex = 0;
+                }
 
                 GalleryListState.Visibility = Visibility.Collapsed;
                 SpeciesDetailState.Visibility = Visibility.Collapsed;
@@ -260,6 +302,35 @@ namespace EarthEvolutionProject.Views
             {
                 MessageBox.Show("Будь ласка, заповніть обов'язкові поля: Назву та Період.", "Валідація", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
+            }
+
+            string fromVal = FromValueTextBox.Text.Trim().Replace(',', '.'); 
+            string fromUnit = (FromUnitComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "млн";
+
+            if (!double.TryParse(fromVal, out _))
+            {
+                MessageBox.Show("Будь ласка, введіть коректне числове значення у перше поле часу.", "Помилка валідації", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string finalExistenceString = "";
+
+            if (IsRangeCheckBox.IsChecked == true)
+            {
+                string toVal = ToValueTextBox.Text.Trim().Replace(',', '.');
+                string toUnit = (ToUnitComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "млн";
+
+                if (!double.TryParse(toVal, out _))
+                {
+                    MessageBox.Show("Ви обрали діапазон, але не ввели коректне числове значення у друге поле (До).", "Помилка валідації", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                finalExistenceString = $"{fromVal} {fromUnit} - {toVal} {toUnit} років тому";
+            }
+            else
+            {
+                finalExistenceString = $"{fromVal} {fromUnit} років тому";
             }
 
             string actionText = _isEditMode ? "зберегти зміни в цьому організмі" : "додати цей новий вид до проєкту";
@@ -313,7 +384,7 @@ namespace EarthEvolutionProject.Views
                     _editingOrganism.Type = TypeComboBox.SelectedItem?.ToString() ?? "Невідомо";
                     _editingOrganism.PeriodId = globalTargetPeriod.Id;
                     _editingOrganism.PeriodName = globalTargetPeriod.Name;
-                    _editingOrganism.Existence = ExistenceTextBox.Text;
+                    _editingOrganism.Existence = finalExistenceString; 
                     _editingOrganism.Lifestyle = LifestyleTextBox.Text;
                     _editingOrganism.Image = ImagePathTextBox.Text;
                 }
@@ -327,7 +398,7 @@ namespace EarthEvolutionProject.Views
                         Type = TypeComboBox.SelectedItem?.ToString() ?? "Невідомо",
                         PeriodId = globalTargetPeriod.Id,
                         PeriodName = globalTargetPeriod.Name,
-                        Existence = ExistenceTextBox.Text,
+                        Existence = finalExistenceString, 
                         Lifestyle = LifestyleTextBox.Text,
                         Image = string.IsNullOrWhiteSpace(ImagePathTextBox.Text)
                             ? "/Images/Organisms/default.png"
@@ -349,6 +420,18 @@ namespace EarthEvolutionProject.Views
                 CrudFormGrid.Visibility = Visibility.Collapsed;
                 SpeciesDetailState.Visibility = Visibility.Collapsed;
                 GalleryListState.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void SetComboBoxValue(ComboBox comboBox, string text)
+        {
+            foreach (ComboBoxItem item in comboBox.Items)
+            {
+                if (item.Content.ToString() == text)
+                {
+                    comboBox.SelectedItem = item;
+                    break;
+                }
             }
         }
 
@@ -400,6 +483,7 @@ namespace EarthEvolutionProject.Views
             if (_currentPeriod != null)
             {
                 SpeciesItemsControl.ItemsSource = _currentPeriod.Organisms;
+                UpdateScrollViewer();
             }
 
             CrudFormGrid.Visibility = Visibility.Collapsed;
@@ -413,9 +497,52 @@ namespace EarthEvolutionProject.Views
             ScientificNameTextBox.Clear();
             TypeComboBox.SelectedIndex = -1;
             PeriodComboBox.SelectedIndex = -1;
-            ExistenceTextBox.Clear();
             LifestyleTextBox.Clear();
             ImagePathTextBox.Clear();
+            FromValueTextBox.Clear();
+            FromUnitComboBox.SelectedIndex = 0;
+            ToValueTextBox.Clear();
+            ToUnitComboBox.SelectedIndex = 0;
+            IsRangeCheckBox.IsChecked = false;
+            IsRangeCheckBox_Changed(null!, null!);
+        }
+
+        private void IsRangeCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (ToValueColumn == null || ToValueTextBox == null || ToUnitComboBox == null) return;
+
+            if (IsRangeCheckBox.IsChecked == true)
+            {
+                ToValueColumn.Width = new GridLength(1, GridUnitType.Star);
+                ToUnitColumn.Width = GridLength.Auto;
+
+                RangeSeparatorText.Visibility = Visibility.Visible;
+                ToValueTextBox.Visibility = Visibility.Visible;
+                ToUnitComboBox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ToValueColumn.Width = new GridLength(0);
+                ToUnitColumn.Width = new GridLength(0);
+
+                RangeSeparatorText.Visibility = Visibility.Collapsed;
+                ToValueTextBox.Visibility = Visibility.Collapsed;
+                ToUnitComboBox.Visibility = Visibility.Visible;
+
+                ToValueTextBox.Text = string.Empty;
+            }
+        }
+
+        private void UpdateScrollViewer()
+        {
+            int count = SpeciesItemsControl.Items.Count;
+            GalleryScrollViewer.VerticalScrollBarVisibility =
+                count > 9 ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled;
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !e.Text.All(c => char.IsDigit(c) || c == '.' || c == ',');
         }
     }
 }

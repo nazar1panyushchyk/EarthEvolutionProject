@@ -40,12 +40,17 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
-                                              Fill="{DynamicResource AccentBlueBrush}" 
-                                              Width="20" Height="20" Stretch="Fill" Margin="0,0,15,0"/>
+                                        <Image Source="/Images/Icon/user.png" 
+                                             Width="28" 
+                                             Height="28" 
+                                             Stretch="Uniform" 
+                                             Margin="0,0,15,0"
+                                             RenderOptions.BitmapScalingMode="HighQuality"/>
                                         <TextBlock Text="{Binding}" 
-                                                   Foreground="{DynamicResource PrimaryTextBrush}" 
-                                                   FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                             Foreground="{DynamicResource PrimaryTextBrush}" 
+                                             FontSize="14" 
+                                             VerticalAlignment="Center" 
+                                             FontWeight="SemiBold"/>
                                     </StackPanel>
 
                                     <Button Grid.Column="1"

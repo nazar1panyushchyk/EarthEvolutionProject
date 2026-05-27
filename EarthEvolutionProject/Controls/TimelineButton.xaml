@@ -25,7 +25,8 @@
                 VerticalAlignment="Stretch"
                 VerticalContentAlignment="Center"
                 SnapsToDevicePixels="True"
-                Background="#2B7793">
+                Background="{Binding BackgroundColor}">
+
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}"
@@ -49,12 +50,15 @@
 
                 <StackPanel VerticalAlignment="Center" Margin="0,6">
                     <TextBlock x:Name="TitleText"
+                               Text="{Binding Title}"
                                Foreground="White"
                                FontSize="13"
                                FontWeight="SemiBold"
                                HorizontalAlignment="Center"
                                TextAlignment="Center"/>
+
                     <TextBlock x:Name="YearsText"
+                               Text="{Binding Years}"
                                Foreground="#E0E0E0"
                                FontSize="10"
                                HorizontalAlignment="Center"

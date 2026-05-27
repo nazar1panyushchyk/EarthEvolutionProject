@@ -21,6 +21,7 @@
     <None Remove="Images\Backgrounds\paleo.jpg" />
     <None Remove="Images\Backgrounds\triass.jpg" />
     <None Remove="Images\Icon\earthicon.ico" />
+    <None Remove="Images\Icon\user.png" />
     <None Remove="Images\Organisms\allo.png" />
     <None Remove="Images\Organisms\brachio.png" />
     <None Remove="Images\Organisms\cerato.png" />
@@ -114,6 +115,7 @@
  
   <ItemGroup>
     <Resource Include="Images\Icon\earthicon.ico" />
+    <Resource Include="Images\Icon\user.png" />
   </ItemGroup>
 
   
