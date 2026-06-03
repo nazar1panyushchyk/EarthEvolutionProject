@@ -26,14 +26,19 @@ namespace EarthEvolutionProject.Views
         /// </summary>
         public event EventHandler<string>? PeriodSelected;
 
-        private List<PeriodViewModel> _periods; 
+        private List<PeriodViewModel> _periods;
+
+        /// <summary>
+        /// Внутрішня модель представлення для відображення картки окремого геологічного періоду 
+        /// на інтерактивній панелі шкали часу.
+        /// </summary>
         public class PeriodViewModel
         {
             public string Title { get; set; } = string.Empty;
             public string Years { get; set; } = string.Empty;
             public Brush BackgroundColor { get; set; } = Brushes.Transparent;
             public string Tag { get; set; } = string.Empty;
-            public bool IsActive { get; set; } 
+            public bool IsActive { get; set; }
         }
 
         /// <summary>
@@ -77,6 +82,11 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Оновлює логічний стан активності елементів шкали часу, порівнюючи їхні унікальні ідентифікатори 
+        /// із переданим кодом, та примусово оновлює пов’язаний візуальний компонент керування.
+        /// </summary>
+        /// <param name="activeId">Текстовий ідентифікатор геологічного періоду, який стає активним.</param>
         public void UpdateActiveButton(string activeId)
         {
             foreach (var period in _periods)

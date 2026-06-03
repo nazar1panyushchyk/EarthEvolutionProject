@@ -13,7 +13,6 @@
   <ItemGroup>
     <None Remove="Controls\OrganismCardView.xaml" />
     <None Remove="Controls\TimelineButton.xaml" />
-    <None Remove="Data\evolution_data.json" />
     <None Remove="Images\Backgrounds\anthropo.jpg" />
     <None Remove="Images\Backgrounds\cretaceo.jpg" />
     <None Remove="Images\Backgrounds\jurassic.jpeg" />
@@ -23,6 +22,7 @@
     <None Remove="Images\Icon\earthicon.ico" />
     <None Remove="Images\Icon\user.png" />
     <None Remove="Images\Organisms\allo.png" />
+    <None Remove="Images\Organisms\Anthropogene\panth.png" />
     <None Remove="Images\Organisms\brachio.png" />
     <None Remove="Images\Organisms\cerato.png" />
     <None Remove="Images\Organisms\dimor.png" />
@@ -43,6 +43,7 @@
     <None Remove="MainWindow.xaml" />
     <None Remove="Themes\DarkTheme.xaml" />
     <None Remove="Themes\LightTheme.xaml" />
+    <None Remove="Views\ComparisonView.xaml" />
     <None Remove="Views\FactWindow.xaml" />
     <None Remove="Views\LoginWindow.xaml" />
     <None Remove="Views\PeriodDetailsView.xaml" />
@@ -53,20 +54,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\evolution_data.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="earthicon.ico" />
-  </ItemGroup>
-
- 
-  <ItemGroup>
     <Resource Include="Images\Backgrounds\**\*.*">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\Organisms\**\*.*">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
   </ItemGroup>
 
  
@@ -87,6 +86,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ComparisonView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FactWindow.xaml">
@@ -123,6 +125,23 @@
     <Compile Update="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <Resource Update="Images\Organisms\Anthropogene\canis.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Update="Images\Organisms\Anthropogene\coelod.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Update="Data\evolution_data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

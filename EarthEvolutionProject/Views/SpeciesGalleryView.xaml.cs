@@ -27,8 +27,14 @@ namespace EarthEvolutionProject.Views
         private List<Period> _allPeriods = [];
         private bool _isEditMode = false;
 
+        /// <summary>
+        /// Подія, що виникає при виборі конкретного організму або скиданні вибору в межах галереї.
+        /// </summary>
         public event EventHandler<Organism?>? OrganismSelected;
 
+        /// <summary>
+        /// Конструктор користувацького елемента керування. Ініціалізує всі графічні компоненти галереї видів.
+        /// </summary>
         public SpeciesGalleryView()
         {
             InitializeComponent();
@@ -198,6 +204,9 @@ namespace EarthEvolutionProject.Views
             this.DataContext = organism;
         }
 
+        /// <summary>
+        /// Заповнює випадаючі списки категорій організмів та геологічних періодів для форми редагування.
+        /// </summary>
         public void PopulateComboBoxes(IEnumerable<string> types, IEnumerable<Period> periods)
         {
             _allPeriods = periods.ToList();
@@ -206,6 +215,9 @@ namespace EarthEvolutionProject.Views
             PeriodComboBox.ItemsSource = _allPeriods;
         }
 
+        /// <summary>
+        /// Обробник події кліку для додавання організму. Скидає поля форми та переводить вікно в режим створення.
+        /// </summary>
         private void AddOrganismButton_Click(object sender, RoutedEventArgs e)
         {
             _isEditMode = false;
@@ -224,6 +236,9 @@ namespace EarthEvolutionProject.Views
             CrudFormGrid.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Обробник події кліку для редагування організму. Заповнює форму поточними даними та парсить часові межі.
+        /// </summary>
         private void EditOrganismButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.DataContext is Organism organism)
@@ -242,30 +257,39 @@ namespace EarthEvolutionProject.Views
                 try
                 {
                     string savedExistence = organism.Existence ?? "";
-                    string clean = savedExistence.Replace(" років тому", "").Trim();
 
-                    if (clean.Contains("-"))
+                    if (savedExistence.Contains("-"))
                     {
                         IsRangeCheckBox.IsChecked = true;
                         IsRangeCheckBox_Changed(null!, null!);
 
-                        string[] parts = clean.Split('-');
-                        string left = parts[0].Trim(); 
-                        string right = parts[1].Trim(); 
+                        string[] parts = savedExistence.Split('-');
+                        string left = parts[0].Trim();
+                        string right = parts[1].Trim();
 
-                        string[] leftWords = left.Split(' ');
+                        string leftClean = left.Replace(" років тому", "").Trim();
+                        string[] leftWords = leftClean.Split(' ');
                         FromValueTextBox.Text = leftWords[0];
                         SetComboBoxValue(FromUnitComboBox, leftWords.Length > 1 ? leftWords[1] : "млн");
 
-                        string[] rightWords = right.Split(' ');
-                        ToValueTextBox.Text = rightWords[0];
-                        SetComboBoxValue(ToUnitComboBox, rightWords.Length > 1 ? rightWords[1] : "млн");
+                        if (right.Equals("н.ч", StringComparison.OrdinalIgnoreCase))
+                        {
+                            SetComboBoxValue(ToUnitComboBox, "н.ч");
+                        }
+                        else
+                        {
+                            string rightClean = right.Replace(" років тому", "").Trim();
+                            string[] rightWords = rightClean.Split(' ');
+                            ToValueTextBox.Text = rightWords[0];
+                            SetComboBoxValue(ToUnitComboBox, rightWords.Length > 1 ? rightWords[1] : "млн");
+                        }
                     }
                     else
                     {
                         IsRangeCheckBox.IsChecked = false;
                         IsRangeCheckBox_Changed(null!, null!);
 
+                        string clean = savedExistence.Replace(" років тому", "").Trim();
                         string[] words = clean.Split(' ');
                         FromValueTextBox.Text = words[0];
                         SetComboBoxValue(FromUnitComboBox, words.Length > 1 ? words[1] : "млн");
@@ -285,6 +309,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Відкриває діалогове вікно операційної системи для вибору графічного файлу зображення істоти.
+        /// </summary>
         private void BrowseImageButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -296,6 +323,10 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Валідує введені дані форми, збирає фінальний рядок існування, створює або оновлює 
+        /// об'єкт організму і викликає збереження до файлу конфігурації.
+        /// </summary>
         private void SaveFormButton_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(CommonNameTextBox.Text) || PeriodComboBox.SelectedValue == null)
@@ -304,7 +335,7 @@ namespace EarthEvolutionProject.Views
                 return;
             }
 
-            string fromVal = FromValueTextBox.Text.Trim().Replace(',', '.'); 
+            string fromVal = FromValueTextBox.Text.Trim().Replace(',', '.');
             string fromUnit = (FromUnitComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "млн";
 
             if (!double.TryParse(fromVal, out _))
@@ -320,13 +351,20 @@ namespace EarthEvolutionProject.Views
                 string toVal = ToValueTextBox.Text.Trim().Replace(',', '.');
                 string toUnit = (ToUnitComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "млн";
 
-                if (!double.TryParse(toVal, out _))
+                if (toUnit == "н.ч")
                 {
-                    MessageBox.Show("Ви обрали діапазон, але не ввели коректне числове значення у друге поле (До).", "Помилка валідації", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    // Форматуємо без нулів та зайвих слів для "нашого часу"
+                    finalExistenceString = $"{fromVal} {fromUnit} років тому - н.ч";
                 }
-
-                finalExistenceString = $"{fromVal} {fromUnit} - {toVal} {toUnit} років тому";
+                else
+                {
+                    if (!double.TryParse(toVal, out _))
+                    {
+                        MessageBox.Show("Ви обрали діапазон, але не ввели коректне числове значення у друге поле (До).", "Помилка валідації", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    finalExistenceString = $"{fromVal} {fromUnit} - {toVal} {toUnit} років тому";
+                }
             }
             else
             {
@@ -384,7 +422,7 @@ namespace EarthEvolutionProject.Views
                     _editingOrganism.Type = TypeComboBox.SelectedItem?.ToString() ?? "Невідомо";
                     _editingOrganism.PeriodId = globalTargetPeriod.Id;
                     _editingOrganism.PeriodName = globalTargetPeriod.Name;
-                    _editingOrganism.Existence = finalExistenceString; 
+                    _editingOrganism.Existence = finalExistenceString;
                     _editingOrganism.Lifestyle = LifestyleTextBox.Text;
                     _editingOrganism.Image = ImagePathTextBox.Text;
                 }
@@ -398,7 +436,7 @@ namespace EarthEvolutionProject.Views
                         Type = TypeComboBox.SelectedItem?.ToString() ?? "Невідомо",
                         PeriodId = globalTargetPeriod.Id,
                         PeriodName = globalTargetPeriod.Name,
-                        Existence = finalExistenceString, 
+                        Existence = finalExistenceString,
                         Lifestyle = LifestyleTextBox.Text,
                         Image = string.IsNullOrWhiteSpace(ImagePathTextBox.Text)
                             ? "/Images/Organisms/default.png"
@@ -423,6 +461,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Встановлює вибраний елемент у випадаючому списку ComboBox на основі збігу текстового рядка.
+        /// </summary>
         private void SetComboBoxValue(ComboBox comboBox, string text)
         {
             foreach (ComboBoxItem item in comboBox.Items)
@@ -435,6 +476,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє запит на повне видалення організму з бази даних та оновлює стан пов'язаних модулів.
+        /// </summary>
         private void DeleteOrganismButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.DataContext is Organism organism)
@@ -473,11 +517,17 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробник скасування редагування або створення. Повертає користувача в головне вікно галереї.
+        /// </summary>
         private void CancelFormButton_Click(object sender, RoutedEventArgs e)
         {
             ShowGallery();
         }
 
+        /// <summary>
+        /// Перемикає візуальні контейнери для показу головної сітки галереї та оновлює смуги прокрутки.
+        /// </summary>
         private void ShowGallery()
         {
             if (_currentPeriod != null)
@@ -491,6 +541,9 @@ namespace EarthEvolutionProject.Views
             GalleryListState.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Повністю очищує текстові поля форми та скидає стан прапорців діапазону.
+        /// </summary>
         private void ClearFormFields()
         {
             CommonNameTextBox.Clear();
@@ -507,6 +560,9 @@ namespace EarthEvolutionProject.Views
             IsRangeCheckBox_Changed(null!, null!);
         }
 
+        /// <summary>
+        /// Обробляє зміну стану прапорця діапазону років, динамічно згортаючи або розгортаючи колонки форми.
+        /// </summary>
         private void IsRangeCheckBox_Changed(object sender, RoutedEventArgs e)
         {
             if (ToValueColumn == null || ToValueTextBox == null || ToUnitComboBox == null) return;
@@ -533,6 +589,32 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє зміну обраної одиниці виміру часу для другого поля. 
+        /// Якщо обрано "н.ч" (наш час), числове поле автоматично заповнюється нулем та стає недоступним для редагування.
+        /// </summary>
+        private void ToUnitComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ToValueTextBox == null || ToUnitComboBox == null) return;
+
+            if (ToUnitComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content.ToString() == "н.ч")
+            {
+                ToValueTextBox.Text = "0";
+                ToValueTextBox.IsEnabled = false;
+            }
+            else
+            {
+                if (ToValueTextBox.Text == "0" && !ToValueTextBox.IsEnabled)
+                {
+                    ToValueTextBox.Text = string.Empty;
+                }
+                ToValueTextBox.IsEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Контролює динамічну видимість вертикальної смуги прокрутки залежно від загальної кількості елементів.
+        /// </summary>
         private void UpdateScrollViewer()
         {
             int count = SpeciesItemsControl.Items.Count;
@@ -540,9 +622,26 @@ namespace EarthEvolutionProject.Views
                 count > 9 ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled;
         }
 
+        /// <summary>
+        /// Виконує перевірку символів введення у реальному часі, дозволяючи лише цифри та розділові знаки.
+        /// </summary>
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !e.Text.All(c => char.IsDigit(c) || c == '.' || c == ',');
+        }
+
+        private void CompareOrganismButton_Click(object sender, RoutedEventArgs e)
+        {
+            var frameworkElement = sender as FrameworkElement;
+            var currentOrganism = frameworkElement?.DataContext as Organism;
+
+            if (currentOrganism != null)
+            {
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    mainWindow.NavigateToComparisonWithOrganism(currentOrganism);
+                }
+            }
         }
     }
 }

@@ -43,6 +43,7 @@ namespace EarthEvolutionProject
             {
                 _isNavigatingBack = true;
 
+                ComparisonGrid.Visibility = Visibility.Collapsed;
                 SearchResultsGrid.Visibility = Visibility.Collapsed;
                 MainContentGrid.Visibility = Visibility.Visible;
                 TimelinePanel.Visibility = Visibility.Visible;
@@ -86,6 +87,12 @@ namespace EarthEvolutionProject
             this.Closing += MainWindow_Closing;
         }
 
+        /// <summary>
+        /// Обробляє подію повного рендерингу вмісту вікна. Виконує первинне заповнення списків фільтрації 
+        /// унікальними категоріями організмів та ініціює показ вікна з цікавими фактами.
+        /// </summary>
+        /// <param name="sender">Джерело події рендерингу.</param>
+        /// <param name="e">Аргументи події.</param>
         private void MainWindow_ContentRendered(object? sender, EventArgs e)
         {
             this.ContentRendered -= MainWindow_ContentRendered;
@@ -118,12 +125,14 @@ namespace EarthEvolutionProject
 
                 var dataWrapper = System.Text.Json.JsonSerializer.Deserialize<EvolutionDataWrapper>(jsonString);
 
-                _allPeriods = dataWrapper?.Periods ?? [];
+                var periods = dataWrapper?.Periods ?? [];
+
+                _allPeriods = periods;
                 _allFacts = dataWrapper?.InterestingFacts ?? [];
 
-                if (_allPeriods != null)
+                foreach (var period in periods)
                 {
-                    foreach (var period in _allPeriods)
+                    if (period.Organisms != null)
                     {
                         foreach (var organism in period.Organisms)
                         {
@@ -133,10 +142,10 @@ namespace EarthEvolutionProject
                     }
                 }
 
-                if (_allPeriods != null && _allPeriods.Any())
+                if (periods.Any())
                 {
-                    var allTypes = _allPeriods
-                        .SelectMany(p => p.Organisms)
+                    var allTypes = periods
+                        .SelectMany(p => p.Organisms ?? [])
                         .Select(o => o.Type)
                         .Where(t => !string.IsNullOrEmpty(t))
                         .Distinct()
@@ -147,13 +156,18 @@ namespace EarthEvolutionProject
 
                 RestoreSessionState();
 
+                ComparisonPage.LoadData(periods);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Помилка ініціалізації: " + ex.Message);
+                System.Windows.MessageBox.Show($"Помилка завантаження даних: {ex.Message}");
             }
         }
 
+        /// <summary>
+        /// Виконує збереження поточного стану бази знань та масиву фактів назад у текстовий файл JSON 
+        /// із використанням інструментів бібліотеки Newtonsoft.Json та перевіркою наявності цільової директорії.
+        /// </summary>
         public void SaveDataToJson()
         {
             try
@@ -182,6 +196,10 @@ namespace EarthEvolutionProject
             }
         }
 
+        /// <summary>
+        /// Перевіряє налаштування профілю користувача та за потреби обирає випадковий текстовий рядок 
+        /// із масиву фактів для відображення у спеціальному модальному вікні при старті.
+        /// </summary>
         private void ShowWelcomeFactIfNeeded()
         {
             var profile = _profileManager.CurrentProfile;
@@ -196,7 +214,7 @@ namespace EarthEvolutionProject
             string selectedFact = _allFacts[randomIndex];
 
             FactWindow factWindow = new FactWindow(selectedFact);
-            factWindow.Owner = this; 
+            factWindow.Owner = this;
 
             if (factWindow.ShowDialog() == true)
             {
@@ -208,6 +226,12 @@ namespace EarthEvolutionProject
             }
         }
 
+        /// <summary>
+        /// Обробляє зміну стану прапорця відображення фактів у налаштуваннях екрана, 
+        /// синхронізуючи значення з профілем користувача та перезаписуючи конфігурацію.
+        /// </summary>
+        /// <param name="sender">Елемент керування CheckBox.</param>
+        /// <param name="e">Аргументи події зміни стану.</param>
         private void WelcomeFactsCheckBox_Changed(object sender, RoutedEventArgs e)
         {
             var profile = _profileManager.CurrentProfile;
@@ -259,7 +283,7 @@ namespace EarthEvolutionProject
         }
 
         /// <summary>
-        /// Реалізує алгоритм фільтрації даних у реальному часі. Аналізує введений текст та обрані категорії, 
+        /// Реалізує алгоритм фільтрації даних у реальному часі. Аналізує введений текст та обрані категорії, 
         /// після чого змінює видимість контейнерів інтерфейсу для відображення результатів пошуку.
         /// </summary>
         /// <param name="sender">Джерело події зміни фільтра.</param>
@@ -276,6 +300,7 @@ namespace EarthEvolutionProject
 
             if (string.IsNullOrWhiteSpace(query) && !selectedTypes.Any())
             {
+                ComparisonGrid.Visibility = Visibility.Collapsed;
                 MainContentGrid.Visibility = Visibility.Visible;
                 SearchResultsGrid.Visibility = Visibility.Collapsed;
                 TimelinePanel.Visibility = Visibility.Visible;
@@ -284,6 +309,7 @@ namespace EarthEvolutionProject
                 return;
             }
 
+            ComparisonGrid.Visibility = Visibility.Collapsed;
             MainContentGrid.Visibility = Visibility.Collapsed;
             SearchResultsGrid.Visibility = Visibility.Visible;
             TimelinePanel.Visibility = Visibility.Collapsed;
@@ -301,7 +327,7 @@ namespace EarthEvolutionProject
 
         /// <summary>
         /// Обробляє вибір конкретної істоти зі списку результатів пошуку. Скидає стан панелі пошуку, 
-        /// автоматично перемикає програму на відповідний період та відкриває детальну картку обраного організму.
+        /// автоматично перемикає програму на відповідний період та відкриває детальку картку обраного організму.
         /// </summary>
         /// <param name="sender">Джерело події вибору.</param>
         /// <param name="selectedOrganism">Об'єкт моделі обраного організму.</param>
@@ -309,6 +335,7 @@ namespace EarthEvolutionProject
         {
             MainSearchBar.ClearAndHide();
 
+            ComparisonGrid.Visibility = Visibility.Collapsed;
             MainContentGrid.Visibility = Visibility.Visible;
             SearchResultsGrid.Visibility = Visibility.Collapsed;
             TimelinePanel.Visibility = Visibility.Visible;
@@ -345,6 +372,12 @@ namespace EarthEvolutionProject
             }
         }
 
+        /// <summary>
+        /// Обробляє подію закриття головного вікна програми. Фіксує останню активну сутність організму, 
+        /// яка переглядалася користувачем на момент виходу, для її наступного відновлення.
+        /// </summary>
+        /// <param name="sender">Джерело події закриття.</param>
+        /// <param name="e">Аргументи скасування події.</param>
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             if (_profileManager.CurrentProfile != null)
@@ -363,6 +396,10 @@ namespace EarthEvolutionProject
             }
         }
 
+        /// <summary>
+        /// Відновлює стан користувацького сеансу на основі завантаженого профілю: заповнює історію пошуку, 
+        /// активує збережений раніше геологічний період та автоматично відкриває картку останньої істоти.
+        /// </summary>
         private void RestoreSessionState()
         {
             if (_profileManager.CurrentProfile == null || _allPeriods == null || !_allPeriods.Any()) return;
@@ -397,6 +434,12 @@ namespace EarthEvolutionProject
             }
         }
 
+        /// <summary>
+        /// Обробляє натискання на кнопку налаштувань. Ініціалізує стан елементів керування у спливаючому 
+        /// вікні параметрами профілю та відкриває графічний елемент Popup.
+        /// </summary>
+        /// <param name="sender">Кнопка налаштувань.</param>
+        /// <param name="e">Аргументи події кліку.</param>
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             if (_isPopupOpenBeforeClick)
@@ -415,12 +458,52 @@ namespace EarthEvolutionProject
             _isPopupOpenBeforeClick = true;
         }
 
+        /// <summary>
+        /// Обробляє подію закриття спливаючого вікна налаштувань, скидаючи внутрішній прапорець 
+        /// активності для коректної обробки наступних кліків миші.
+        /// </summary>
+        /// <param name="sender">Компонент Popup налаштувань.</param>
+        /// <param name="e">Аргументи події закриття.</param>
         private void SettingsPopup_Closed(object sender, EventArgs e)
         {
             if (!SettingsButton.IsMouseOver)
             {
                 _isPopupOpenBeforeClick = false;
             }
+        }
+
+        private void CompareButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isComparisonOpen = ComparisonGrid.Visibility == Visibility.Visible;
+
+            if (isComparisonOpen)
+            {
+                ComparisonGrid.Visibility = Visibility.Collapsed;
+                MainContentGrid.Visibility = Visibility.Visible;
+                TimelinePanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ComparisonPage.LoadData(_allPeriods);
+
+                MainContentGrid.Visibility = Visibility.Collapsed;
+                SearchResultsGrid.Visibility = Visibility.Collapsed;
+                TimelinePanel.Visibility = Visibility.Collapsed;
+                ComparisonGrid.Visibility = Visibility.Visible;
+            }
+        }
+
+        public void NavigateToComparisonWithOrganism(Organism selectedOrganism)
+        {
+            ComparisonPage.LoadData(_allPeriods);
+
+            MainContentGrid.Visibility = Visibility.Collapsed;
+            SearchResultsGrid.Visibility = Visibility.Collapsed;
+            TimelinePanel.Visibility = Visibility.Collapsed;
+
+            ComparisonGrid.Visibility = Visibility.Visible;
+
+            ComparisonPage.SelectOrganismForComparison(selectedOrganism);
         }
     }
 }

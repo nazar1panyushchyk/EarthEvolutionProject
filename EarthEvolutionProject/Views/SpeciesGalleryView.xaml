@@ -21,7 +21,7 @@
                         HorizontalAlignment="Right" 
                         Padding="10,5"
                         Click="AddOrganismButton_Click" 
-                        Style="{DynamicResource PrimaryButtonStyle}"/>      
+                        Style="{DynamicResource PrimaryButtonStyle}"/>
                 </Grid>
 
                 <ScrollViewer Grid.Row="1" x:Name="GalleryScrollViewer" 
@@ -50,11 +50,18 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,0,0,10">
-                    <Button Content="← Назад до галереї" Click="BackToList_Click"
+                    <Button Content="← Назад" Click="BackToList_Click"
                             Background="Transparent" Foreground="{DynamicResource AccentBlueBrush}" BorderThickness="0" 
                             HorizontalAlignment="Left" FontSize="12" Cursor="Hand"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="📊 Порівняти" 
+                            Click="CompareOrganismButton_Click" 
+                            Margin="0,0,10,0" 
+                            Height="35"
+                            Padding="15,0"
+                            Cursor="Hand"
+                            Style="{DynamicResource PrimaryButtonStyle}"/>
                         <Button Content="✏️ Редагувати" Click="EditOrganismButton_Click" Margin="0,0,10,0" Padding="8,3" Style="{DynamicResource PrimaryButtonStyle}"/>
                         <Button Content="🗑️ Видалити" Click="DeleteOrganismButton_Click" Background="#FF4B4B" Foreground="White" Padding="8,3"/>
                     </StackPanel>
@@ -243,7 +250,8 @@
                                         Background="{DynamicResource SecondaryBackgroundBrush}" 
                                         Foreground="{DynamicResource PrimaryTextBrush}"
                                         SelectedIndex="0"
-                                        Visibility="Collapsed">
+                                        Visibility="Collapsed"
+                                        SelectionChanged="ToUnitComboBox_SelectionChanged">
                                     <ComboBox.Style>
                                         <Style TargetType="ComboBox">
                                             <Setter Property="Template">
@@ -283,6 +291,7 @@
                                     <ComboBoxItem Content="млн"/>
                                     <ComboBoxItem Content="тис"/>
                                     <ComboBoxItem Content="р."/>
+                                    <ComboBoxItem Content="н.ч"/>
                                 </ComboBox>
                             </Grid>
                         </StackPanel>

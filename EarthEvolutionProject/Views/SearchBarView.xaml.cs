@@ -14,27 +14,53 @@ namespace EarthEvolutionProject.Views
     /// </summary>
     public partial class SearchBarView : UserControl
     {
+        /// <summary>
+        /// Подія, що виникає при зміні тексту пошуку або стану обраних фільтрів категорій.
+        /// </summary>
         public event EventHandler? FilterChanged;
+
+        /// <summary>
+        /// Подія, що сигналізує про запит користувача вийти з режиму пошуку та повернутися назад.
+        /// </summary>
         public event EventHandler? BackRequested;
+
+        /// <summary>
+        /// Подія, яка генерується після успішного додавання або повного очищення елементів історії пошукових запитів.
+        /// </summary>
         public event EventHandler? HistoryUpdated;
 
         private List<string> _searchHistory = new List<string>();
 
+        /// <summary>
+        /// Повертає поточний текстовий рядок, введений користувачем у поле пошукового введення.
+        /// </summary>
         public string SearchText => SearchInput.Text;
 
+        /// <summary>
+        /// Повертає повний внутрішній список збережених раніше текстових пошукових запитів користувача.
+        /// </summary>
         public List<string> SearchHistoryList => _searchHistory;
 
+        /// <summary>
+        /// Повертає колекцію текстових назв категорій (типів) організмів, які зараз відмічені у випадаючому списку фільтрації.
+        /// </summary>
         public List<string> SelectedTypes => TypeFilter.ItemsSource?
              .Cast<FilterItem>()
              .Where(x => x.IsSelected)
              .Select(x => x.TypeName)
              .ToList() ?? new List<string>();
 
+        /// <summary>
+        /// Конструктор користувацького елемента пошукової панелі. Виконує базову ініціалізацію графічних підсистем XAML.
+        /// </summary>
         public SearchBarView()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Обробляє динамічну зміну тексту в полі введення, регулюючи видимість підказки-плейсхолдера та кнопки повернення.
+        /// </summary>
         private void SearchInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (PlaceholderText != null)
@@ -43,8 +69,6 @@ namespace EarthEvolutionProject.Views
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             }
-
-            UpdateBackButtonVisibility();
         }
 
         /// <summary>
@@ -75,6 +99,9 @@ namespace EarthEvolutionProject.Views
             FilterChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Обробляє натискання клавіш у полі введення, ініціюючи процес пошуку при натисканні клавіші Enter.
+        /// </summary>
         private void SearchInput_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -83,11 +110,17 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє клік по графічній кнопці із зображенням лупи, запускаючи виконання поточної процедури пошуку.
+        /// </summary>
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             PerformSearch(SearchInput.Text);
         }
 
+        /// <summary>
+        /// Перехоплює клік миші по елементу списку історії, підставляючи вибраний текст у поле введення та активуючи пошук.
+        /// </summary>
         private void HistoryListBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.OriginalSource is FrameworkElement fe && fe.DataContext is string selectedQuery)
@@ -101,6 +134,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє отримання фокусу полем введення, відображаючи випадаюче вікно історії та підписуючись на кліки по головному вікну.
+        /// </summary>
         private void SearchInput_GotFocus(object sender, RoutedEventArgs e)
         {
             if (_searchHistory != null && _searchHistory.Any())
@@ -115,6 +151,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє втрату фокусу полем введення пошуку, примусово відновлюючи видимість фонового тексту підказки.
+        /// </summary>
         private void SearchInput_LostFocus(object sender, RoutedEventArgs e)
         {
             if (PlaceholderText != null)
@@ -125,6 +164,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє початкове натискання лівої кнопки миші на полі пошуку для коректного відображення або оновлення прив'язок спливаючого вікна.
+        /// </summary>
         private void SearchInput_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (_searchHistory != null && _searchHistory.Any() && !HistoryPopup.IsOpen)
@@ -140,11 +182,17 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробник події повного закриття спливаючого графічного контейнера PopUp із переліком попередніх запитів.
+        /// </summary>
         private void HistoryPopup_Closed(object sender, EventArgs e)
         {
             HistoryPopup.IsOpen = false;
         }
 
+        /// <summary>
+        /// Додає новий текстовий запит на початок списку історії, видаляє дублікати та контролює обмеження розміру списку до десяти елементів.
+        /// </summary>
         private void AddQueryToHistory(string query)
         {
             _searchHistory.Remove(query);
@@ -162,6 +210,9 @@ namespace EarthEvolutionProject.Views
             HistoryUpdated?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Повністю очищує масив збережених раніше текстових запитів користувача та оновлює стан пов'язаних елементів списку.
+        /// </summary>
         private void ClearHistory_Click(object sender, RoutedEventArgs e)
         {
             _searchHistory.Clear();
@@ -170,6 +221,9 @@ namespace EarthEvolutionProject.Views
             HistoryUpdated?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Відстежує кліки по всій площині головного вікна програми для автоматичного приховування вікна історії, якщо користувач клікнув ззовні.
+        /// </summary>
         private void ParentWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!SearchInput.IsMouseOver && !HistoryPopup.IsMouseOver)
@@ -278,7 +332,7 @@ namespace EarthEvolutionProject.Views
         }
 
         /// <summary>
-        /// Керує видимістю кнопки "Назад" залежно від наявності введеного тексту або обраних категорій фільтрації.
+        /// Керує видимістю кнопки "Назад" залежно від наявності введеного текста або обраних категорій фільтрації.
         /// </summary>
         private void UpdateBackButtonVisibility()
         {
@@ -294,8 +348,6 @@ namespace EarthEvolutionProject.Views
         /// </summary>
         public void ClearAndHide()
         {
-            //SearchInput.Text = string.Empty;
-
             ResetFilters_Click(null, null);
 
             if (BackButton != null)
@@ -304,4 +356,4 @@ namespace EarthEvolutionProject.Views
             }
         }
     }
-} 
+}

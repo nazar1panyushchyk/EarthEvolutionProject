@@ -13,10 +13,20 @@ using System.Windows.Shapes;
 
 namespace EarthEvolutionProject.Views
 {
+    /// <summary>
+    /// Графічний інтерфейс авторизації та управління профілями користувачів у системі.
+    /// Забезпечує завантаження наявних облікових записів, створення нових ідентифікаторів та видалення даних.
+    /// </summary>
     public partial class LoginWindow : Window
     {
+        /// <summary>
+        /// Сервісний об'єкт для управління файловими операціями, збереженням та завантаженням профілів користувачів.
+        /// </summary>
         private readonly ProfileManager _profileManager;
 
+        /// <summary>
+        /// Конструктор вікна авторизації. Ініціалізує компоненти XAML, створює менеджер профілів та завантажує список користувачів.
+        /// </summary>
         public LoginWindow()
         {
             InitializeComponent();
@@ -24,6 +34,9 @@ namespace EarthEvolutionProject.Views
             LoadUsers();
         }
 
+        /// <summary>
+        /// Завантажує список усіх зареєстрованих імен користувачів із бази даних або файлової системи та налаштовує видимість елементів інтерфейсу.
+        /// </summary>
         private void LoadUsers()
         {
             var users = _profileManager.GetAllUsernames();
@@ -40,6 +53,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє зміну вибору елемента у списку профілів, автоматично підставляючи обране ім'я в текстове поле введення.
+        /// </summary>
         private void UsersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (UsersListBox.SelectedItem is string selectedUsername)
@@ -48,6 +64,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Обробляє ручне введення або зміну тексту в полі імені, скидаючи виділення у загальному списку профілів при розбіжності даних.
+        /// </summary>
         private void NewUserTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (UsersListBox.SelectedItem is string selected && selected != NewUserTextBox.Text)
@@ -56,6 +75,9 @@ namespace EarthEvolutionProject.Views
             }
         }
 
+        /// <summary>
+        /// Виконує перевірку введеного імені, ініціює авторизацію чи створення нового профілю та відкриває головне вікно програми.
+        /// </summary>
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = NewUserTextBox.Text.Trim();
@@ -74,6 +96,9 @@ namespace EarthEvolutionProject.Views
             this.Close();
         }
 
+        /// <summary>
+        /// Обробляє запит на повне видалення вибраного профілю користувача разом із його локальною історією після підтвердження операції.
+        /// </summary>
         private void DeleteProfileItemButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button deleteButton && deleteButton.CommandParameter is string username)

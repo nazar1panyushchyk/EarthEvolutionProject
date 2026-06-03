@@ -15,6 +15,10 @@ namespace EarthEvolutionProject.Controls
 {
     public partial class OrganismCardView : UserControl
     {
+        /// <summary>
+        /// Конструктор елемента керування карткою організму. Ініціалізує компоненти XAML 
+        /// та підписується на події динамічної зміни розмірів батьківського вікна застосунку.
+        /// </summary>
         public OrganismCardView()
         {
             InitializeComponent();
@@ -28,6 +32,11 @@ namespace EarthEvolutionProject.Controls
             };
         }
 
+        /// <summary>
+        /// Динамічно коригує максимальну висоту графічного зображення картки CardImage 
+        /// залежно від поточних вертикальних габаритів головного вікна програми.
+        /// </summary>
+        /// <param name="windowHeight">Поточне значення фактичної висоти батьківського вікна.</param>
         private void UpdateImageSize(double windowHeight)
         {
             CardImage.MaxHeight = windowHeight > 700 ? 100 : 80;
